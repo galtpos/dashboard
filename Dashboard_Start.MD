@@ -1,20 +1,27 @@
-# Aaron Day Show - Music Video Creator Dashboard
+# Aaron Day Show - Master Automation Dashboard
 
-## 🎯 CURRENT STATUS: FULL PREVIEW + MP4 EXPORT
+## 🎯 CURRENT STATUS: MUSIC VIDEO CREATOR + SOCIAL MEDIA SCHEDULER
 
-The music video creator now parses lyrics correctly, previews with the new default styling, and exports finished videos as MP4 files. Remaining polish items are around UX, but the end‑to‑end flow (upload → preview → render → download) works in Chrome/Edge.
+The dashboard now includes two major features:
+1. **Music Video Creator**: Full preview + MP4 export with SRT parsing, audio visualizers, and text positioning
+2. **Social Media Scheduler**: X (Twitter) posting with unlimited character support, auto-threading, scheduling, and dual account management (@aaronrday and @theaarondayshow)
+
+Both systems are fully functional with backend API integration and comprehensive debugging.
 
 ## 📁 PROJECT STRUCTURE
 
 ```
 /Users/aaronday/Documents/TheAaronDayShow/local-video-clipper/
 ├── public/
-│   ├── index.html          # Main interface with tabs and controls
-│   ├── music.js            # Core music video logic (2700+ lines)
+│   ├── index.html          # Main dashboard interface with tabbed navigation
+│   ├── dashboard.js        # Master tab switching and UI management
+│   ├── music.js            # Music video creator (3000+ lines)
+│   ├── social-media.js     # Social media scheduler with X integration
 │   ├── wedontbow.srt       # Test SRT file (1209 lines)
-│   └── server.js           # Express server
+│   └── [other UI modules]  # viral-engine.js, viral-ui.js, etc.
+├── server.js               # Express server with API endpoints
 ├── package.json            # Node dependencies
-└── README.md              # Basic setup info
+└── README.md              # Setup documentation
 ```
 
 ## 🚀 HOW TO START
@@ -30,7 +37,7 @@ node server.js
 ```
 - Server runs on **localhost:3001**
 - Navigate to **localhost:3001** in browser
-- Click "Music" tab to access video creator
+- Use tabbed interface: "MUSIC" for video creator, "SOCIAL MEDIA" for X scheduler
 
 ## 🎵 MUSIC VIDEO CREATOR FEATURES
 
@@ -80,13 +87,95 @@ node server.js
 - Downloads automatically using the sanitized filename from the new "Output File Name" field (WebM fallback delivered if conversion fails)
 - MP4 files saved in `local-video-clipper/clips/` for later reuse
 
+## 📱 SOCIAL MEDIA SCHEDULER FEATURES
+
+### ✅ WORKING FEATURES
+
+#### 1. **Dual Account Support**
+- @aaronrday and @theaarondayshow X accounts
+- Easy account switching with dedicated stats per account
+- Account-specific post history and drafts
+
+#### 2. **Unlimited Character Posts**
+- No character limits - write as much as you want
+- Smart auto-threading for posts over 280 characters
+- Real-time thread preview showing post count
+- Intelligent content splitting by sentences/paragraphs
+
+#### 3. **Scheduling System**
+- Date/time picker for future posts
+- Scheduled posts list with management
+- Delete/edit scheduled posts
+- Default scheduling to 9 AM next day
+
+#### 4. **Draft Management**
+- Save drafts locally for later use
+- Account-specific draft storage
+- Draft counter in statistics dashboard
+
+#### 5. **Statistics Dashboard**
+- Posts today counter
+- Scheduled posts count
+- Drafts saved count
+- Total posts per account
+
+#### 6. **Backend API Integration**
+- `/api/social-media/post` - Immediate posting
+- `/api/social-media/schedule` - Post scheduling
+- `/api/social-media/accounts` - Account management
+- `/api/social-media/stats/:account` - Account statistics
+
+### ⚠️ KNOWN ISSUES & DEBUGGING
+
+#### Current Tab Switching Problem
+- Social Media tab may not respond to clicks
+- Added comprehensive debugging to identify root cause
+- Check browser console (F12) for diagnostic messages:
+  - `🔄 Switching to tab: social-media`
+  - `📱 Social Media JS: DOM loaded`
+  - `✅ Activated tab: social-media`
+
+#### Debugging Steps Added
+1. **Dashboard.js**: Extensive logging for tab switching mechanism
+2. **Social-media.js**: DOM loading and initialization tracking
+3. **Server**: API endpoint testing and response logging
+
 ### ⚠️ REMAINING TODO
 
+#### Music Video Creator
 - Additional UX polish (persisting settings, progress bar during render)
 - Broader browser testing (Safari requires alternate capture pipeline)
 - Optional: expose MP4 render history in the dashboard
 
+#### Social Media Scheduler
+- Fix tab switching issue (currently under investigation)
+- Connect real X API credentials for live posting
+- Add image/media upload support
+- Add analytics and engagement tracking
+- Expand to other platforms (LinkedIn, Facebook, etc.)
+
 ## 🔧 TECHNICAL ARCHITECTURE
+
+### Master Dashboard Architecture
+
+#### Tab Management (dashboard.js)
+- `MasterDashboard` class manages all tab switching
+- `showTab(tabId)` - Handles tab activation/deactivation
+- `setupTabSwitching()` - Initializes click listeners
+- Supports tabs: music, video-clipper, social-media, etc.
+
+#### Social Media System (social-media.js)
+- `SocialMediaScheduler` class - Main functionality
+- `createThread(content)` - Splits long posts into threaded tweets
+- `postNow()` / `schedulePost()` / `saveDraft()` - Core actions
+- `updateStats()` - Real-time statistics updates
+- Local storage integration for persistence
+
+#### Backend API Endpoints (server.js)
+- Express server with CORS and JSON middleware
+- Social media routes: `/api/social-media/*`
+- FFmpeg integration for video processing
+- File serving for videos, transcripts, and clips
 
 ### Core Functions (music.js)
 
