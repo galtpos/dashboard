@@ -37,6 +37,8 @@ class MasterDashboard {
     }
     
     showTab(tabId) {
+        console.log(`🔄 Switching to tab: ${tabId}`);
+        
         // Hide all tab panels
         this.tabs.forEach(id => {
             const panel = document.getElementById(`${id}-tab`);
@@ -45,6 +47,7 @@ class MasterDashboard {
             if (panel) {
                 panel.classList.add('hidden');
                 panel.classList.remove('active');
+                console.log(`📴 Hidden tab: ${id}`);
             }
             
             if (button) {
@@ -56,9 +59,15 @@ class MasterDashboard {
         const activePanel = document.getElementById(`${tabId}-tab`);
         const activeButton = document.querySelector(`[data-tab="${tabId}"]`);
         
+        console.log(`🔍 Looking for panel: ${tabId}-tab`, activePanel);
+        console.log(`🔍 Looking for button: [data-tab="${tabId}"]`, activeButton);
+        
         if (activePanel) {
             activePanel.classList.remove('hidden');
             activePanel.classList.add('active');
+            console.log(`✅ Activated tab: ${tabId}`);
+        } else {
+            console.error(`❌ Panel not found: ${tabId}-tab`);
         }
         
         if (activeButton) {

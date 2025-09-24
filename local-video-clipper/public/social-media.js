@@ -487,20 +487,35 @@ class SocialMediaScheduler {
 
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('📱 Social Media JS: DOM loaded');
+    
     // Only initialize if we're on the social media tab
-    if (document.getElementById('social-media-tab')) {
+    const socialTab = document.getElementById('social-media-tab');
+    console.log('📱 Social Media JS: Found tab element:', socialTab);
+    
+    if (socialTab) {
+        console.log('📱 Social Media JS: Initializing scheduler...');
         window.socialMediaScheduler = new SocialMediaScheduler();
+        console.log('📱 Social Media JS: Scheduler initialized');
         
         // Update scheduled posts list when switching to social media tab
-        const socialTab = document.querySelector('[data-tab="social-media"]');
-        if (socialTab) {
-            socialTab.addEventListener('click', () => {
+        const socialTabButton = document.querySelector('[data-tab="social-media"]');
+        console.log('📱 Social Media JS: Found tab button:', socialTabButton);
+        
+        if (socialTabButton) {
+            socialTabButton.addEventListener('click', () => {
+                console.log('📱 Social Media JS: Tab clicked, updating content...');
                 setTimeout(() => {
-                    window.socialMediaScheduler.updateScheduledPostsList();
-                    window.socialMediaScheduler.updateStats();
+                    if (window.socialMediaScheduler) {
+                        window.socialMediaScheduler.updateScheduledPostsList();
+                        window.socialMediaScheduler.updateStats();
+                        console.log('📱 Social Media JS: Content updated');
+                    }
                 }, 100);
             });
         }
+    } else {
+        console.warn('📱 Social Media JS: Tab element not found!');
     }
 });
 
