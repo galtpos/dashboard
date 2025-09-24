@@ -1,0 +1,2562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Aaron Day Show - Master Automation Dashboard</title>
+    <!-- Google Fonts - Aaron Day Show Typography Stack -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Inter:wght@400;500;600&family=Roboto:wght@400;500&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        // Daylight Freedom Cinematic Theme
+                        'neon-black': '#000000',
+                        'neon-gold': '#FFC700',
+                        'neon-pink': '#FF57B2',
+                        'neon-teal': '#00E6FF',
+                        'neon-gray': '#D1D1D1',
+                        'neon-red': '#FF3B3B',
+                        'neon-border': '#222222',
+                        'neon-secondary': '#A0A0A0',
+                        
+                        // Legacy support (mapped to new theme)
+                        'primary-red': '#FF3B3B',
+                        'primary-black': '#000000',
+                        'primary-gold': '#FFC700',
+                        'charcoal': '#000000',
+                        'sand': '#D1D1D1',
+                        'gold': '#FFC700',
+                        'amber': '#FFC700',
+                        'surface': '#000000',
+                        'dark-gray': '#222222',
+                        'light-gray': '#A0A0A0',
+                        'border': '#222222',
+                        
+                        // Functional
+                        'danger-glow': '#ef4444',
+                        'viral-purple': '#a855f7',
+                        'safe-muted': '#6b7280',
+                        'zano-blue': '#3b82f6',
+                        'matrix-green': '#10b981',
+                        'ghost-gray': '#2a2a3a'
+                    },
+                    fontFamily: {
+                        'headline': ['Montserrat', 'Poppins', 'Inter', 'sans-serif'],
+                        'subhead': ['Montserrat', 'Inter', 'sans-serif'],
+                        'body': ['Inter', 'Roboto', 'sans-serif'],
+                        'mono': ['JetBrains Mono', 'Fira Code', 'monospace'],
+                        'cta': ['Montserrat', 'Inter', 'sans-serif']
+                    },
+                    fontSize: {
+                        // Cinematic Typography Scale
+                        'xs': ['0.75rem', { lineHeight: '1.5' }],
+                        'sm': ['0.875rem', { lineHeight: '1.6' }],
+                        'base': ['15px', { lineHeight: '1.6' }],        // Body text minimum 15px
+                        'lg': ['1.125rem', { lineHeight: '1.6' }],
+                        'xl': ['1.25rem', { lineHeight: '1.5' }],
+                        '2xl': ['1.5rem', { lineHeight: '1.4' }],        // Subheadings
+                        '3xl': ['1.875rem', { lineHeight: '1.3' }],      // Section headers +20%
+                        '4xl': ['2.25rem', { lineHeight: '1.2' }],
+                        '5xl': ['3rem', { lineHeight: '1.1' }],
+                        '6xl': ['3.75rem', { lineHeight: '1.0' }]
+                    },
+                    letterSpacing: {
+                        'section-header': '0.05em',    // +5% for section headers
+                        'normal': '0',
+                        'wide': '0.025em'
+                    },
+                    boxShadow: {
+                        'neon-gold': '0 0 20px rgba(255, 199, 0, 0.5)',
+                        'neon-pink': '0 0 20px rgba(255, 87, 178, 0.5)',
+                        'neon-teal': '0 0 20px rgba(0, 230, 255, 0.5)',
+                        'neon-glow': '0 0 30px rgba(255, 87, 178, 0.3), 0 0 60px rgba(0, 230, 255, 0.2)'
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* AARON DAY SHOW - CLEAN PROFESSIONAL THEME */
+        /* DAYLIGHT FREEDOM CINEMATIC THEME */
+        body { 
+            background: #000000;
+            color: #D1D1D1; 
+            font-family: 'Inter', 'Montserrat', sans-serif;
+            font-size: 15px;
+            line-height: 1.6;
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* Remove old background */
+        body::before {
+            display: none;
+        }
+        
+        /* Very Subtle Background */
+        body::before {
+            content: '';
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: linear-gradient(to top, 
+                rgba(212, 175, 55, 0.015) 0%,
+                rgba(139, 124, 246, 0.01) 50%,
+                transparent 100%
+            );
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        /* Heading Styles - Much More Subtle */
+        /* CINEMATIC TYPOGRAPHY HIERARCHY */
+        
+        /* Section Headers - Gold, Bold, All Caps */
+        h1, h2.section-header, .section-header {
+            font-family: 'Montserrat', sans-serif !important;
+            font-weight: 700 !important;
+            font-size: 1.875rem !important;  /* 3xl - 20% larger */
+            line-height: 1.3 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.05em !important;  /* +5% spacing */
+            color: #FFC700 !important;  /* Gold */
+            margin-bottom: 1.5rem;
+        }
+        
+        /* Subheadings - White, Title Case */
+        h2, h3, .font-headline {
+            font-family: 'Montserrat', sans-serif !important;
+            font-weight: 500 !important;
+            font-size: 1.5rem !important;  /* 2xl */
+            line-height: 1.4 !important;
+            color: #FFFFFF !important;
+            margin-bottom: 1rem;
+        }
+        
+        /* Labels and smaller headings */
+        h4, .font-subhead, .subhead, label {
+            font-family: 'Montserrat', sans-serif !important;
+            font-weight: 500 !important;
+            font-size: 1.125rem !important;  /* lg */
+            line-height: 1.5 !important;
+            color: #D1D1D1 !important;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Body text */
+        p, .text-base, div {
+            font-family: 'Inter', sans-serif !important;
+            font-size: 15px !important;
+            line-height: 1.6 !important;
+            color: #D1D1D1 !important;
+        }
+        
+        /* Secondary/metadata text */
+        .text-secondary, .text-sm {
+            color: #A0A0A0 !important;
+            font-size: 14px !important;
+        }
+        
+        @media (max-width: 768px) {
+            h1 { font-size: 2rem !important; }
+            h2 { font-size: 1.5rem !important; }
+            h3 { font-size: 1.2rem !important; }
+        }
+        
+        /* Subheadings - Montserrat SemiBold */
+        .font-subhead, .subheading {
+            font-family: 'Montserrat', sans-serif !important;
+            font-weight: 600 !important;
+        }
+        
+        /* CTA Buttons - Montserrat Bold */
+        .font-cta, button, .btn-primary {
+            font-family: 'Montserrat', sans-serif !important;
+            font-weight: 700 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.05em !important;
+        }
+        
+        /* Removed pirate signal animation */
+        
+        /* Removed all glitch animations for cleaner interface */
+        
+        /* CINEMATIC PANEL STYLES */
+        .video-card {
+            background: #000000;  /* Deep black */
+            border: 1px solid #222222;  /* Minimal gray border */
+            border-radius: 0.75rem;
+            padding: 2rem;  /* Increased padding by 15% */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);  /* Subtle depth */
+            transition: all 0.3s ease;
+            margin-bottom: 1.5rem;  /* Increased spacing */
+        }
+        
+        .video-card:hover {
+            border-color: #FFC700;  /* Gold border on hover */
+            box-shadow: 0 6px 30px rgba(255, 199, 0, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        /* Section titles within cards */
+        .video-card h2, .video-card h3 {
+            color: #FFC700 !important;  /* Gold section headers */
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid #222222;
+            padding-bottom: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        /* Tab Panel Styles */
+        .tab-panel {
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        
+        .tab-panel.hidden {
+            display: none !important;
+        }
+        
+        .tab-panel.active {
+            display: block !important;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Override Tailwind's hidden class for active tabs */
+        .tab-panel.active.hidden {
+            display: block !important;
+        }
+        
+        /* Heat Meter for Controversy */
+        .heat-meter {
+            background: linear-gradient(90deg, #FFC700 0%, #FF57B2 50%, #00E6FF 100%);
+            height: 6px;
+            border-radius: 3px;
+            box-shadow: 0 0 10px rgba(255, 199, 0, 0.5);
+            transition: all 0.3s ease;
+        }
+        
+        /* CINEMATIC BUTTON STYLES */
+        .btn-primary {
+            background: #FFC700;  /* Gold */
+            color: #000000;       /* Black text */
+            border: none;
+            border-radius: 0.75rem;  /* rounded-xl */
+            padding: 1rem 2rem;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;     /* Bold */
+            text-transform: uppercase;
+            letter-spacing: 0.05em;  /* Slightly expanded */
+            box-shadow: 0 4px 15px rgba(255, 199, 0, 0.3);  /* Subtle shadow */
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-size: 0.875rem;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #FF57B2, #00E6FF);  /* Pink to teal gradient */
+            color: #FFFFFF;       /* White text */
+            box-shadow: 0 6px 25px rgba(255, 87, 178, 0.4), 0 6px 25px rgba(0, 230, 255, 0.2);
+            transform: translateY(-2px) scale(1.02);
+        }
+        
+        .btn-primary:disabled {
+            background: #333333;
+            color: #777777;
+            box-shadow: none;
+            transform: none;
+            cursor: not-allowed;
+        }
+        
+        /* SECONDARY BUTTON STYLES */
+        .btn-secondary {
+            background: #222222;  /* Dark gray */
+            color: #D1D1D1;       /* Light gray text */
+            border: 1px solid #FFC700;  /* Gold border */
+            border-radius: 0.75rem;
+            padding: 1rem 2rem;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-size: 0.875rem;
+        }
+        
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #FF57B2, #00E6FF);
+            color: #FFFFFF;
+            border-color: transparent;
+            box-shadow: 0 6px 25px rgba(255, 87, 178, 0.4), 0 6px 25px rgba(0, 230, 255, 0.2);
+            transform: translateY(-2px) scale(1.02);
+        }
+        
+        .btn-secondary:disabled {
+            background: #333333;
+            color: #777777;
+            border-color: #555555;
+            box-shadow: none;
+            transform: none;
+            cursor: not-allowed;
+        }
+        
+        /* CINEMATIC DASHBOARD TABS */
+        .dashboard-tab {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            font-size: 0.875rem;
+            letter-spacing: 0.025em;
+            text-transform: uppercase;
+            color: #A0A0A0;  /* Secondary gray */
+            padding: 1rem 1.5rem;
+            border: 1px solid #222222;  /* Minimal border */
+            background: #000000;  /* Black background */
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            box-shadow: none;
+            cursor: pointer;
+        }
+        
+        .dashboard-tab:hover {
+            color: #FFC700;  /* Gold */
+            background: rgba(255, 199, 0, 0.05);  /* Very subtle gold tint */
+            border-color: #FFC700;
+            transform: translateY(-1px);
+        }
+        
+        .dashboard-tab.active {
+            color: #000000;  /* Black text */
+            background: #FFC700;  /* Gold background */
+            border-color: #FFC700;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(255, 199, 0, 0.3);
+        }
+        
+        .btn-viral {
+            background: linear-gradient(135deg, #d4af37, #b8941f);
+            border: 1px solid #d4af37;
+        }
+        
+        /* Status Indicators - Simplified */
+        .status-live { 
+            background: #dc2626;
+        }
+        
+        .status-viral {
+            background: #d4af37;
+        }
+        
+        /* Simple Overlay - No Effects */
+        .crt-overlay {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Truth Meter Indicators */
+        .truth-verified { color: #10B981; }
+        .truth-opinion { color: #F59E0B; }
+        .truth-spicy { color: #EF4444; }
+        .truth-viral { color: #8B5CF6; }
+        
+        /* CLASSIFIED Stamp */
+        .classified-stamp {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #DC2626;
+            color: white;
+            padding: 4px 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            font-weight: bold;
+            transform: rotate(-15deg);
+            border: 2px solid #F59E0B;
+            box-shadow: 0 0 10px rgba(220, 38, 38, 0.5);
+        }
+        
+        /* Backdrop Blur for Modals */
+        .modal-backdrop {
+            backdrop-filter: blur(8px) saturate(50%);
+            background: rgba(10, 10, 10, 0.8);
+        }
+        
+        /* Military HUD Corner Brackets */
+        .hud-brackets {
+            position: relative;
+        }
+        
+        .hud-brackets::before,
+        .hud-brackets::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #F59E0B;
+        }
+        
+        .hud-brackets::before {
+            top: -2px;
+            left: -2px;
+            border-right: none;
+            border-bottom: none;
+        }
+        
+        .hud-brackets::after {
+            bottom: -2px;
+            right: -2px;
+            border-left: none;
+            border-top: none;
+        }
+        
+        /* Waveform Visualization */
+        .waveform {
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                #10B981 20%, 
+                #F59E0B 40%, 
+                #EF4444 60%, 
+                #8B5CF6 80%, 
+                transparent 100%
+            );
+            height: 60px;
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .waveform::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                90deg,
+                transparent 0px,
+                rgba(16, 185, 129, 0.3) 2px,
+                transparent 4px,
+                rgba(245, 158, 11, 0.3) 6px,
+                transparent 8px,
+                rgba(239, 68, 68, 0.3) 10px,
+                transparent 12px
+            );
+            animation: waveform-pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes waveform-pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+        
+        /* Master Dashboard Header Style - Very Subtle */
+        .pirate-nav {
+            background: linear-gradient(135deg, #0f0f17 0%, #1a1a2e 100%);
+            border-bottom: 1px solid #374151;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        }
+        
+        .pirate-nav-item {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 18px;
+            letter-spacing: 1px;
+            color: #F5E6D3;
+            padding: 12px 20px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .pirate-nav-item:hover {
+            border-color: #F59E0B;
+            background: rgba(245, 158, 11, 0.1);
+            text-shadow: 0 0 10px #F59E0B;
+        }
+        
+        .pirate-nav-item.active {
+            border-color: #DC2626;
+            background: rgba(220, 38, 38, 0.2);
+            color: #DC2626;
+            font-size: 20px;
+            text-shadow: 0 0 15px #DC2626;
+        }
+        
+        /* Aggressive Header Styling */
+        .aggressive-header {
+            font-family: 'Anton', 'Bebas Neue', sans-serif !important;
+            font-size: 3.5rem !important;
+            text-shadow: 0 0 20px #DC2626, 0 0 40px #DC2626;
+            letter-spacing: -2px !important;
+        }
+        
+        /* Removed pulsing animation */
+        .signal-pulse-breath {
+            opacity: 0.8;
+        }
+        
+        /* Removed glitch hover effects */
+        
+        /* Removed scanlines overlay */
+        
+        /* Terminal Monospace for Transcripts - Simplified */
+        .terminal-text {
+            font-family: 'JetBrains Mono', 'Courier New', monospace !important;
+            color: #d1d5db;
+            background: rgba(26, 26, 46, 0.6);
+        }
+        
+        /* Heat Meter */
+        .heat-meter {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .heat-bar {
+            width: 3px;
+            height: 12px;
+            background: #333;
+            border-radius: 1px;
+        }
+        
+        .heat-bar.hot-1 { background: #FFA500; }
+        .heat-bar.hot-2 { background: #FF6B35; }
+        .heat-bar.hot-3 { background: #FF4444; }
+        .heat-bar.hot-4 { background: #FF0000; }
+        .heat-bar.hot-5 { background: #dc2626; }
+        
+        /* Danger Level Indicator */
+        .danger-level {
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            color: #FF0000;
+        }
+        
+        /* Controversy Scanner Waveform */
+        .controversy-waveform {
+            height: 40px;
+            background: linear-gradient(to right, 
+                rgba(0, 255, 0, 0.3) 0%, 
+                rgba(255, 255, 0, 0.5) 30%,
+                rgba(255, 165, 0, 0.7) 60%,
+                rgba(255, 0, 0, 1) 100%
+            );
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .waveform-spike {
+            position: absolute;
+            bottom: 0;
+            width: 2px;
+            background: #dc2626;
+            opacity: 0.8;
+        }
+        
+        /* Military Time Format - Simplified */
+        .military-time {
+            font-family: 'JetBrains Mono', monospace;
+            color: #d1d5db;
+        }
+    </style>
+</head>
+<body>
+    <div class="min-h-screen bg-charcoal">
+        <!-- PIRATE BROADCAST HEADER -->
+        <header class="pirate-nav">
+            <div class="max-w-7xl mx-auto flex items-center justify-between">
+                <!-- Station Identity -->
+                <div class="flex items-center space-x-6">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-4 h-4 bg-neon-gold rounded-full" style="box-shadow: 0 0 15px rgba(255, 199, 0, 0.8);"></div>
+                        <div class="status-live w-3 h-3 bg-primary-red rounded-full"></div>
+                    </div>
+                    <div>
+                        <h1 class="section-header text-4xl font-bold text-neon-gold tracking-section-header uppercase">
+                            The Aaron Day Show
+                        </h1>
+                        <p class="text-base text-neon-secondary tracking-wide font-medium uppercase">
+                            Master Automation Dashboard • Content Warfare HQ
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- Status Display -->
+                <div class="flex items-center space-x-6">
+                    <div class="font-mono text-sm">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-matrix-green">●</span>
+                            <span class="text-sand">SIGNAL ACTIVE</span>
+                        </div>
+                        <div class="text-xs text-safe-muted">
+                            LOCALHOST:3001 • ENCRYPTED
+                        </div>
+                    </div>
+                    
+                    <!-- MAXIMUM CONTROVERSY BUTTON -->
+                    <button id="force-viral-mode" class="btn-viral px-6 py-3 rounded font-cta text-sm text-white hover:scale-105 transform transition-all duration-200">
+                        ⚡ MAXIMUM CONTROVERSY ⚡
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Master Dashboard Navigation -->
+            <div class="border-t border-primary-red/30 mt-4">
+                <div class="max-w-7xl mx-auto flex space-x-1 overflow-x-auto">
+                    <button class="dashboard-tab active" data-tab="music">MUSIC</button>
+                    <button class="dashboard-tab" data-tab="video-clipper">VIDEO CLIPPER</button>
+                    <button class="dashboard-tab" data-tab="podcast-automation">PODCAST AUTOMATION</button>
+                    <button class="dashboard-tab" data-tab="content-generation">CONTENT GENERATION</button>
+                    <button class="dashboard-tab" data-tab="analytics-insights">ANALYTICS & INSIGHTS</button>
+                    <button class="dashboard-tab" data-tab="distribution-hub">DISTRIBUTION HUB</button>
+                    <button class="dashboard-tab" data-tab="audience-management">AUDIENCE MANAGEMENT</button>
+                    <button class="dashboard-tab" data-tab="system-monitoring">SYSTEM MONITORING</button>
+                    <button class="dashboard-tab" data-tab="campaign-manager">CAMPAIGN MANAGER</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="max-w-7xl mx-auto p-6">
+            <!-- MUSIC TAB CONTENT - FORCED VISIBLE -->
+            <div style="background: #333 !important; color: #FFC700 !important; padding: 30px !important; margin: 20px !important; border: 3px solid #FFC700 !important; font-size: 18px !important; z-index: 9999 !important; position: relative !important;">
+                
+                
+                <h1 style="color: #FFC700 !important; font-size: 32px !important; margin-bottom: 20px !important;">🎵 SUNO MUSIC & LYRIC INTEGRATION</h1>
+                
+                <div style="margin-bottom: 30px !important;">
+                    <h3 style="color: #FF57B2 !important; font-size: 24px !important; margin-bottom: 15px !important;">TIMESTAMPED LYRIC DOWNLOADER</h3>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 20px;">
+                        <div style="background: #444 !important; padding: 20px !important; border: 1px solid #FFC700 !important; border-radius: 8px;">
+                            <h4 style="color: #FFC700 !important; margin-bottom: 10px !important;">SUNO SONG URL</h4>
+                            <input type="url" id="suno-url" placeholder="https://suno.com/song/your-song-id" 
+                                   style="width: 100% !important; padding: 12px !important; background: #000 !important; border: 1px solid #FFC700 !important; color: #FFC700 !important; border-radius: 4px !important; margin-bottom: 15px !important;">
+                            
+                            <h4 style="color: #FFC700 !important; margin-bottom: 10px !important;">SESSION TOKEN</h4>
+                            <input type="password" id="session-token" placeholder="Your __session cookie value" 
+                                   style="width: 100% !important; padding: 12px !important; background: #000 !important; border: 1px solid #FFC700 !important; color: #FFC700 !important; border-radius: 4px !important; margin-bottom: 20px !important;">
+                            
+                            <div style="display: flex; gap: 15px;">
+                                <button id="download-srt" style="flex: 1; padding: 15px !important; background: #FFC700 !important; color: #000 !important; border: none !important; border-radius: 8px !important; font-weight: bold !important; cursor: pointer !important;">
+                                    DOWNLOAD SRT
+                                </button>
+                                <button id="download-lrc" style="flex: 1; padding: 15px !important; background: #222 !important; color: #FFC700 !important; border: 1px solid #FFC700 !important; border-radius: 8px !important; font-weight: bold !important; cursor: pointer !important;">
+                                    DOWNLOAD LRC
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div style="background: #444 !important; padding: 20px !important; border: 1px solid #FFC700 !important; border-radius: 8px;">
+                            <h4 style="color: #00E6FF !important; margin-bottom: 15px !important;">HOW TO USE</h4>
+                            <div style="font-size: 14px !important; color: #D1D1D1 !important; line-height: 1.6 !important;">
+                                <div style="margin-bottom: 10px;">1. Go to suno.com and find your song</div>
+                                <div style="margin-bottom: 10px;">2. Copy the song URL from the address bar</div>
+                                <div style="margin-bottom: 10px;">3. Get your session token:</div>
+                                <div style="margin-left: 20px; font-size: 12px; margin-bottom: 10px;">
+                                    • Open browser dev tools (F12)<br>
+                                    • Go to Application → Cookies → suno.com<br>
+                                    • Copy the '__session' cookie value
+                                </div>
+                                <div>4. Choose format and download!</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="music-status" style="display: none; background: #444 !important; padding: 15px !important; border-radius: 8px !important; margin-top: 20px !important;">
+                    <div id="music-status-text" style="color: #FFC700 !important;"></div>
+                </div>
+                
+                <!-- MUSIC VIDEO CREATOR - FULL FEATURED -->
+                <div style="margin-top: 40px !important; padding-top: 30px !important; border-top: 2px solid #FFC700 !important;">
+                    <h2 style="color: #FFC700 !important; font-size: 28px !important; margin-bottom: 25px !important;">🎬 MUSIC VIDEO CREATOR</h2>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 30px;">
+                        <!-- Image Upload Section -->
+                        <div style="background: #444 !important; padding: 20px !important; border: 1px solid #FFC700 !important; border-radius: 8px;">
+                            <h4 style="color: #FF57B2 !important; margin-bottom: 15px !important;">IMAGE/BACKGROUND</h4>
+                            
+                            <div style="margin-bottom: 15px;">
+                                <input type="file" id="background-image" accept="image/*" 
+                                       style="width: 100% !important; padding: 12px !important; background: #000 !important; border: 1px solid #FFC700 !important; color: #FFC700 !important; border-radius: 4px !important;">
+                            </div>
+                            
+                            <div id="image-preview" style="width: 100%; height: 200px; background: #222 !important; border: 2px dashed #FFC700 !important; border-radius: 8px !important; display: flex; align-items: center; justify-content: center; color: #A0A0A0 !important; margin-bottom: 15px;">
+                                Drop image here or select above
+                            </div>
+                            
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                                <div>
+                                    <label style="color: #FFC700 !important; font-size: 12px; display: block; margin-bottom: 5px;">Width (px)</label>
+                                    <input type="number" id="video-width" value="1920" min="480" max="3840"
+                                           style="width: 100% !important; padding: 8px !important; background: #000 !important; border: 1px solid #FFC700 !important; color: #FFC700 !important; border-radius: 4px !important;">
+                                </div>
+                                <div>
+                                    <label style="color: #FFC700 !important; font-size: 12px; display: block; margin-bottom: 5px;">Height (px)</label>
+                                    <input type="number" id="video-height" value="1080" min="480" max="2160"
+                                           style="width: 100% !important; padding: 8px !important; background: #000 !important; border: 1px solid #FFC700 !important; color: #FFC700 !important; border-radius: 4px !important;">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Audio Upload Section -->
+                        <div style="background: #444 !important; padding: 20px !important; border: 1px solid #FFC700 !important; border-radius: 8px;">
+                            <h4 style="color: #00E6FF !important; margin-bottom: 15px !important;">AUDIO FILE</h4>
+                            
+                            <div style="margin-bottom: 15px;">
+                                <input type="file" id="audio-file" accept="audio/*" 
+                                       style="width: 100% !important; padding: 12px !important; background: #000 !important; border: 1px solid #FFC700 !important; color: #FFC700 !important; border-radius: 4px !important;">
+                            </div>
+                            
+                            <div id="audio-info" style="background: #222 !important; padding: 15px !important; border-radius: 8px !important; color: #D1D1D1 !important; font-size: 14px !important; margin-bottom: 15px;">
+                                <div>📁 No audio file selected</div>
+                                <div id="audio-duration" style="color: #A0A0A0 !important; margin-top: 5px;"></div>
+                            </div>
+                            
+                            <audio id="audio-preview" controls style="width: 100% !important; margin-bottom: 15px;" hidden>
+                                Your browser does not support the audio element.
+                            </audio>
+                            
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                                <div>
+                                    <label style="color: #FFC700 !important; font-size: 12px; display: block; margin-bottom: 5px;">Start Time (s)</label>
+                                    <input type="number" id="audio-start" value="0" min="0" step="0.1"
+                                           style="width: 100% !important; padding: 8px !important; background: #000 !important; border: 1px solid #FFC700 !important; color: #FFC700 !important; border-radius: 4px !important;">
+                                </div>
+                                <div>
+                                    <label style="color: #FFC700 !important; font-size: 12px; display: block; margin-bottom: 5px;">End Time (s)</label>
+                                    <input type="number" id="audio-end" value="0" min="0" step="0.1"
+                                           style="width: 100% !important; padding: 8px !important; background: #000 !important; border: 1px solid #FFC700 !important; color: #FFC700 !important; border-radius: 4px !important;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Lyrics Upload Section -->
+                    <div style="background: #444 !important; padding: 20px !important; border: 1px solid #FFC700 !important; border-radius: 8px; margin-bottom: 20px;">
+                        <h4 style="color: #FF57B2 !important; margin-bottom: 15px !important;">LYRICS FILE (SRT/VTT)</h4>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                            <!-- File Upload -->
+                            <div>
+                                <label style="color: #FFC700 !important; font-size: 12px; display: block; margin-bottom: 5px;">Upload SRT/VTT File</label>
+                                <input type="file" id="lyrics-file" accept=".srt,.vtt" 
+                                       style="width: 100% !important; padding: 12px !important; background: #000 !important; border: 1px solid #FFC700 !important; color: #FFC700 !important; border-radius: 4px !important; margin-bottom: 10px;">
+                                <button id="use-downloaded-srt" style="width: 100%; padding: 10px !important; background: #222 !important; color: #FFC700 !important; border: 1px solid #FFC700 !important; border-radius: 4px !important; font-size: 12px; cursor: pointer !important;">
+                                    Use Downloaded SRT
+                                </button>
+                            </div>
+                            
+                            <!-- Manual Paste -->
+                            <div>
+                                <label style="color: #FFC700 !important; font-size: 12px; display: block; margin-bottom: 5px;">Or Paste Lyrics Content</label>
+                                <textarea id="lyrics-content" placeholder="Paste SRT or VTT content here..." 
+                                          style="width: 100% !important; height: 120px !important; padding: 12px !important; background: #000 !important; border: 1px solid #FFC700 !important; color: #FFC700 !important; border-radius: 4px !important; font-family: monospace; font-size: 11px; resize: vertical;"></textarea>
+                            </div>
+                        </div>
+                        
+                        <div id="lyrics-status" style="background: #222 !important; padding: 10px !important; border-radius: 4px !important; color: #A0A0A0 !important; font-size: 12px; margin-bottom: 15px;">
+                            📝 No lyrics loaded - Upload file, paste content, or download from Suno above
+                        </div>
+                    </div>
+
+                    <!-- Sync Controls -->
+                    <div style="background: #444 !important; padding: 20px !important; border: 1px solid #FFC700 !important; border-radius: 8px; margin-bottom: 20px;">
+                        <h4 style="color: #FFC700 !important; margin-bottom: 15px !important;">SYNC CONTROLS</h4>
+                        
+                        <!-- Timing Controls -->
+                        <div style="background: #333 !important; padding: 15px !important; border-radius: 8px !important; margin-bottom: 15px;">
+                            <h5 style="color: #FF57B2 !important; margin-bottom: 15px !important; font-size: 14px;">⏱️ TIMING CONTROLS</h5>
+                            
+                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                                <div>
+                                    <label style="color: #FFC700 !important; font-size: 12px; display: block; margin-bottom: 5px;">Global Offset (ms)</label>
+                                    <input type="number" id="lyric-offset" value="0" step="50" min="-5000" max="5000"
+                                           style="width: 100% !important; padding: 8px !important; background: #000 !important; border: 1px solid #FFC700 !important; color: #FFC700 !important; border-radius: 4px !important;">
+                                </div>
+                                <div>
+                                    <label style="color: #FFC700 !important; font-size: 12px; display: block; margin-bottom: 5px;">Speed Adjustment</label>
+                                    <select id="playback-speed" 
+                                            style="width: 100% !important; padding: 8px !important; background: #000 !important; border: 1px solid #FFC700 !important; color: #FFC700 !important; border-radius: 4px !important;">
+                                        <option value="0.75">0.75x (Slower)</option>
+                                        <option value="1.0" selected>1.0x (Normal)</option>
+                                        <option value="1.25">1.25x (Faster)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label style="color: #FFC700 !important; font-size: 12px; display: block; margin-bottom: 5px;">Sync Mode</label>
+                                    <select id="sync-mode" 
+                                            style="width: 100% !important; padding: 8px !important; background: #000 !important; border: 1px solid #FFC700 !important; color: #FFC700 !important; border-radius: 4px !important;">
+                                        <option value="exact">Exact Timing</option>
+                                        <option value="smooth" selected>Smooth Transitions</option>
+                                        <option value="beat">Beat Sync</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                                <button id="sync-backward" style="padding: 8px 15px !important; background: #FF3B3B !important; color: white !important; border: none !important; border-radius: 4px !important; font-size: 12px; cursor: pointer !important;">
+                                    ⏪ -100ms
+                                </button>
+                                <button id="sync-forward" style="padding: 8px 15px !important; background: #10b981 !important; color: white !important; border: none !important; border-radius: 4px !important; font-size: 12px; cursor: pointer !important;">
+                                    ⏩ +100ms
+                                </button>
+                                <button id="reset-sync" style="padding: 8px 15px !important; background: #6b7280 !important; color: white !important; border: none !important; border-radius: 4px !important; font-size: 12px; cursor: pointer !important;">
+                                    🔄 Reset
+                                </button>
+                                <div style="flex: 1; display: flex; align-items: center; justify-content: center; color: #A0A0A0; font-size: 12px;" id="sync-status">
+                                    Ready to sync
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Text Styling Controls -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+                            <div>
+                                <label style="color: #FFC700 !important; font-size: 12px; display: block; margin-bottom: 5px;">Font Size (px)</label>
+                                <input type="number" id="font-size" value="96" min="12" max="200"
+                                       style="width: 100% !important; padding: 8px !important; background: #000 !important; border: 1px solid #FFC700 !important; color: #FFC700 !important; border-radius: 4px !important;">
+                            </div>
+                            <div>
+                                <label style="color: #FFC700 !important; font-size: 12px; display: block; margin-bottom: 5px;">Text Position</label>
+                                <select id="text-position" 
+                                        style="width: 100% !important; padding: 8px !important; background: #000 !important; border: 1px solid #FFC700 !important; color: #FFC700 !important; border-radius: 4px !important;">
+                                    <option value="bottom">Bottom</option>
+                                    <option value="center">Center</option>
+                                    <option value="top">Top</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label style="color: #FFC700 !important; font-size: 12px; display: block; margin-bottom: 5px;">Text Style</label>
+                                <select id="text-style" 
+                                        style="width: 100% !important; padding: 8px !important; background: #000 !important; border: 1px solid #FFC700 !important; color: #FFC700 !important; border-radius: 4px !important;">
+                                    <option value="bold">Bold</option>
+                                    <option value="outline">Outlined</option>
+                                    <option value="shadow">Drop Shadow</option>
+                                    <option value="glow" selected>Neon Glow</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- Lyric Display Controls -->
+                        <div style="background: #333 !important; padding: 15px !important; border-radius: 8px !important; margin-bottom: 15px;">
+                            <h5 style="color: #FF57B2 !important; margin-bottom: 15px !important; font-size: 14px;">📝 LYRIC DISPLAY</h5>
+                            
+                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                                <div>
+                                    <label style="color: #FFC700 !important; font-size: 12px; display: block; margin-bottom: 5px;">Display Mode</label>
+                                    <select id="lyric-display-mode" 
+                                            style="width: 100% !important; padding: 8px !important; background: #000 !important; border: 1px solid #FFC700 !important; color: #FFC700 !important; border-radius: 4px !important;">
+                                        <option value="word">Word by Word</option>
+                                        <option value="line">Full Line</option>
+                                        <option value="phrase" selected>Smart Phrases</option>
+                                        <option value="sentence">Complete Sentences</option>
+                                        <option value="verse">Verse Block (Spotify Style)</option>
+                                        <option value="custom">Custom Grouping</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label style="color: #FFC700 !important; font-size: 12px; display: block; margin-bottom: 5px;">Max Words per Display</label>
+                                    <input type="number" id="max-words" value="8" min="1" max="20"
+                                           style="width: 100% !important; padding: 8px !important; background: #000 !important; border: 1px solid #FFC700 !important; color: #FFC700 !important; border-radius: 4px !important;">
+                                </div>
+                                <div>
+                                    <label style="color: #FFC700 !important; font-size: 12px; display: block; margin-bottom: 5px;">Lines per Verse</label>
+                                    <input type="number" id="lines-per-verse" value="2" min="2" max="12"
+                                           style="width: 100% !important; padding: 8px !important; background: #000 !important; border: 1px solid #FFC700 !important; color: #FFC700 !important; border-radius: 4px !important;">
+                                </div>
+                            </div>
+                            
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                                <div>
+                                    <label style="color: #FFC700 !important; font-size: 12px; display: block; margin-bottom: 5px;">Transition Effect</label>
+                                    <select id="transition-effect" 
+                                            style="width: 100% !important; padding: 8px !important; background: #000 !important; border: 1px solid #FFC700 !important; color: #FFC700 !important; border-radius: 4px !important;">
+                                        <option value="instant">Instant Change</option>
+                                        <option value="fade" selected>Fade In/Out</option>
+                                        <option value="slide">Slide Up</option>
+                                        <option value="typewriter">Typewriter</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label style="color: #FFC700 !important; font-size: 12px; display: block; margin-bottom: 5px;">Preview Lines</label>
+                                    <select id="preview-lines" 
+                                            style="width: 100% !important; padding: 8px !important; background: #000 !important; border: 1px solid #FFC700 !important; color: #FFC700 !important; border-radius: 4px !important;">
+                                        <option value="1" selected>Current Line Only</option>
+                                        <option value="2">Current + Next</option>
+                                        <option value="3">Previous + Current + Next</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Audio Visualizer Controls -->
+                        <div style="background: #222 !important; padding: 15px !important; border-radius: 8px !important; margin-bottom: 20px;">
+                            <h5 style="color: #00E6FF !important; margin-bottom: 15px !important; font-size: 14px;">🎵 AUDIO VISUALIZER</h5>
+                            
+                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                                <div>
+                                    <label style="color: #FFC700 !important; font-size: 11px; display: block; margin-bottom: 5px;">Visualizer Type</label>
+                                    <select id="visualizer-type" 
+                                            style="width: 100% !important; padding: 6px !important; background: #000 !important; border: 1px solid #FFC700 !important; color: #FFC700 !important; border-radius: 4px !important; font-size: 12px;">
+                                        <option value="bars">Frequency Bars</option>
+                                        <option value="waveform">Waveform</option>
+                                        <option value="circle" selected>Circular</option>
+                                        <option value="spiral">Spiral</option>
+                                        <option value="particles">Particles</option>
+                                        <option value="pulse">Pulse Ring</option>
+                                        <option value="spectrum">Spectrum</option>
+                                        <option value="wave3d">3D Wave</option>
+                                        <option value="none">None</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label style="color: #FFC700 !important; font-size: 11px; display: block; margin-bottom: 5px;">Position (3x3 Grid)</label>
+                                    <select id="visualizer-position" 
+                                            style="width: 100% !important; padding: 6px !important; background: #000 !important; border: 1px solid #FFC700 !important; color: #FFC700 !important; border-radius: 4px !important; font-size: 12px;">
+                                        <option value="top-left" selected>Top Left</option>
+                                        <option value="top-center">Top Center</option>
+                                        <option value="top-right">Top Right</option>
+                                        <option value="center-left">Center Left</option>
+                                        <option value="center-center">Center</option>
+                                        <option value="center-right">Center Right</option>
+                                        <option value="bottom-left">Bottom Left</option>
+                                        <option value="bottom-center">Bottom Center</option>
+                                        <option value="bottom-right">Bottom Right</option>
+                                        <option value="overlay">Full Overlay</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label style="color: #FFC700 !important; font-size: 11px; display: block; margin-bottom: 5px;">Size</label>
+                                    <input type="range" id="visualizer-size" min="20" max="200" value="200"
+                                           style="width: 100% !important; margin-top: 8px;">
+                                    <div style="color: #A0A0A0; font-size: 10px; text-align: center; margin-top: 2px;">200px</div>
+                                </div>
+                                <div>
+                                    <label style="color: #FFC700 !important; font-size: 11px; display: block; margin-bottom: 5px;">Sensitivity</label>
+                                    <input type="range" id="visualizer-sensitivity" min="0.1" max="3.0" step="0.1" value="1.5"
+                                           style="width: 100% !important; margin-top: 8px;">
+                                    <div style="color: #A0A0A0; font-size: 10px; text-align: center; margin-top: 2px;">1.5x</div>
+                                </div>
+                            </div>
+                            
+                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
+                                <div>
+                                    <label style="color: #FFC700 !important; font-size: 11px; display: block; margin-bottom: 5px;">Color Theme</label>
+                                    <select id="visualizer-color" 
+                                            style="width: 100% !important; padding: 6px !important; background: #000 !important; border: 1px solid #FFC700 !important; color: #FFC700 !important; border-radius: 4px !important; font-size: 12px;">
+                                        <option value="gold">Gold</option>
+                                        <option value="neon">Neon (Pink→Teal)</option>
+                                        <option value="rainbow">Rainbow</option>
+                                        <option value="white">White</option>
+                                        <option value="red">Red</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label style="color: #FFC700 !important; font-size: 11px; display: block; margin-bottom: 5px;">Opacity</label>
+                                    <input type="range" id="visualizer-opacity" min="0.1" max="1.0" step="0.1" value="0.8"
+                                           style="width: 100% !important; margin-top: 8px;">
+                                    <div style="color: #A0A0A0; font-size: 10px; text-align: center; margin-top: 2px;">80%</div>
+                                </div>
+                                <div>
+                                    <label style="color: #FFC700 !important; font-size: 11px; display: block; margin-bottom: 5px;">Bars Count</label>
+                                    <input type="number" id="visualizer-bars" min="16" max="256" value="64"
+                                           style="width: 100% !important; padding: 6px !important; background: #000 !important; border: 1px solid #FFC700 !important; color: #FFC700 !important; border-radius: 4px !important; font-size: 12px;">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; gap: 15px; margin-bottom: 12px; align-items: flex-end;">
+                            <div style="flex: 2;">
+                                <label for="video-filename" style="color: #FFC700 !important; font-size: 11px; display: block; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.08em;">Output File Name</label>
+                                <input id="video-filename" type="text" value="music-video" placeholder="we-dont-bow"
+                                       style="width: 100% !important; padding: 10px !important; background: #000 !important; border: 1px solid #FFC700 !important; color: #FFC700 !important; border-radius: 6px !important; font-size: 12px; text-transform: lowercase;">
+                                <div style="color: #A0A0A0; font-size: 10px; margin-top: 4px;">Use letters, numbers, dashes, or underscores. .mp4 added automatically.</div>
+                            </div>
+                            <div style="flex: 1; background: #111; border: 1px solid #333; border-radius: 6px; padding: 10px; text-align: center;">
+                                <div style="color: #A0A0A0; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em;">Format</div>
+                                <div style="color: #FFC700; font-size: 13px; font-weight: 600;">MP4 (H.264 + AAC)</div>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; gap: 15px; margin-bottom: 15px;">
+                            <button id="preview-sync" style="flex: 2; padding: 15px !important; background: #222 !important; color: #FFC700 !important; border: 1px solid #FFC700 !important; border-radius: 8px !important; font-weight: bold !important; cursor: pointer !important;">
+                                🎵 PREVIEW SYNC
+                            </button>
+                            <button id="force-preview" style="flex: 1; padding: 15px !important; background: #FF3B3B !important; color: #FFFFFF !important; border: none !important; border-radius: 8px !important; font-weight: bold !important; cursor: pointer !important; font-size: 12px;">
+                                ⚡ FORCE
+                            </button>
+                            <button id="load-wedontbow-srt" style="flex: 1; padding: 15px !important; background: #00E6FF !important; color: #000 !important; border: none !important; border-radius: 8px !important; font-weight: bold !important; cursor: pointer !important; font-size: 11px;">
+                                🎵 LOAD SRT
+                            </button>
+                            <button id="generate-video" style="flex: 2; padding: 15px !important; background: #FFC700 !important; color: #000 !important; border: none !important; border-radius: 8px !important; font-weight: bold !important; cursor: pointer !important;">
+                                🎬 GENERATE VIDEO
+                            </button>
+                        </div>
+                        
+                        <!-- Debug/Test Buttons -->
+                        <div style="display: flex; gap: 10px; justify-content: center;">
+                            <button id="test-uploads" style="padding: 10px 20px !important; background: #333 !important; color: #A0A0A0 !important; border: 1px solid #555 !important; border-radius: 4px !important; font-size: 12px; cursor: pointer !important;">
+                                🔧 Test File Upload System
+                            </button>
+                            <button id="show-preview" style="padding: 10px 20px !important; background: #10b981 !important; color: #FFFFFF !important; border: none !important; border-radius: 4px !important; font-size: 12px; cursor: pointer !important;">
+                                👁️ Show Preview
+                            </button>
+                            <button id="reset-all" style="padding: 10px 20px !important; background: #FF3B3B !important; color: #FFFFFF !important; border: none !important; border-radius: 4px !important; font-size: 12px; cursor: pointer !important;">
+                                🔄 Reset All
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Preview Area -->
+                    <div id="video-preview" style="background: #222 !important; border: 2px solid #FFC700 !important; border-radius: 8px !important; padding: 20px !important; text-align: center; display: none;">
+                        <h4 style="color: #FFC700 !important; margin-bottom: 15px;">🎬 VIDEO PREVIEW</h4>
+                        <canvas id="preview-canvas" style="max-width: 100%; border: 1px solid #444;"></canvas>
+                        
+                        <!-- Audio Controls -->
+                        <div style="margin: 15px 0; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                            <button id="play-pause-btn" style="padding: 8px 15px; background: #FFC700; color: #000; border: none; border-radius: 4px; font-weight: bold; cursor: pointer;">
+                                ▶️ PLAY
+                            </button>
+                            <input type="range" id="audio-scrubber" min="0" max="100" value="0" 
+                                   style="flex: 1; margin: 0 10px;">
+                            <span id="volume-label" style="color: #A0A0A0; font-size: 12px;">🔊</span>
+                            <input type="range" id="volume-control" min="0" max="1" step="0.1" value="0.7" 
+                                   style="width: 80px;">
+                        </div>
+                        
+                        <div style="color: #D1D1D1;">
+                            <div id="current-lyric" style="font-size: 18px; font-weight: bold; color: #FFC700; margin-bottom: 10px;">Ready to preview...</div>
+                            <div id="preview-time" style="font-size: 14px; color: #A0A0A0;">00:00 / 00:00</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tab Content Container -->
+            <div id="tab-content">
+                
+                <!-- Video Clipper Tab (existing functionality) -->
+                <div id="video-clipper-tab" class="tab-panel hidden">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                
+                <!-- Left Panel -->
+                <div class="lg:col-span-1 space-y-6">
+                    <div class="video-card rounded-xl p-6 hud-brackets">
+                        <div class="flex items-center justify-between mb-4">
+                            <h2 class="section-header text-3xl font-bold text-neon-gold tracking-section-header uppercase">Video Source</h2>
+                            <select id="video-sort" class="px-3 py-2 bg-primary-black text-primary-gold rounded border-2 border-primary-red font-mono text-sm focus:border-primary-gold outline-none">
+                                <option value="name-asc">ALPHA SORT ↑</option>
+                                <option value="name-desc">ALPHA SORT ↓</option>
+                                <option value="date-desc">LATEST INTEL</option>
+                                <option value="date-asc">OLDEST INTEL</option>
+                                <option value="size-desc">HEAVY PAYLOAD</option>
+                                <option value="size-asc">LIGHT PAYLOAD</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <input 
+                                type="text" 
+                                id="video-search" 
+                                placeholder="SEARCH INTEL DATABASE..."
+                                class="w-full px-3 py-2 bg-primary-black text-primary-gold rounded border-2 border-primary-red font-mono text-sm focus:border-primary-gold outline-none placeholder-safe-muted"
+                            >
+                        </div>
+                        <div id="video-list" class="space-y-2 max-h-96 overflow-y-auto">
+                            <div class="text-center py-4 text-safe-muted font-mono">SCANNING FOR TRANSMISSIONS...</div>
+                        </div>
+                        <!-- Heat Meter -->
+                        <div class="mt-4">
+                            <div class="text-xs font-mono text-safe-muted mb-1">CONTROVERSY HEAT INDEX</div>
+                            <div class="heat-meter"></div>
+                        </div>
+                    </div>
+
+                    <div class="video-card rounded-xl p-6 hud-brackets">
+                        <h2 class="font-headline text-xl font-bold text-primary-red tracking-wider mb-4">📋 INTELLIGENCE TRANSCRIPT</h2>
+                        <div id="transcript-list" class="space-y-2">
+                            <div class="text-center py-4 text-safe-muted font-mono">DECRYPTING TRANSCRIPTS...</div>
+                        </div>
+                        
+                        <!-- Transcript Content Display -->
+                        <div id="transcript-content" class="mt-4 max-h-96 overflow-y-auto space-y-2 p-4 bg-primary-black/50 rounded border border-primary-red/30">
+                            <div class="text-center py-8 text-safe-muted font-mono">📋 SELECT VIDEO TO LOAD TRANSCRIPT</div>
+                        </div>
+                        <!-- Truth Meter -->
+                        <div class="mt-4 flex justify-between text-xs font-mono">
+                            <span class="truth-verified">🟢 VERIFIED</span>
+                            <span class="truth-opinion">🟡 OPINION</span>
+                            <span class="truth-spicy">🔴 SPICY</span>
+                            <span class="truth-viral">🟣 VIRAL</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Center Panel - MASSIVE PREVIEW (60% of screen) -->
+                <div class="lg:col-span-1 space-y-6">
+                    <div class="video-card rounded-xl p-6 hud-brackets">
+                        <div class="flex items-center justify-between mb-4">
+                            <h2 class="font-headline text-xl font-bold text-primary-red tracking-wider">📺 BROADCAST PREVIEW</h2>
+                            <div class="classified-stamp">CLASSIFIED</div>
+                        </div>
+                        <div id="video-player" class="bg-primary-black rounded-lg crt-overlay">
+                            <div class="h-80 flex items-center justify-center text-safe-muted font-mono text-lg">
+                                <div class="text-center">
+                                    <div class="text-4xl mb-4">📡</div>
+                                    <div>NO SIGNAL DETECTED</div>
+                                    <div class="text-sm mt-2">SELECT TRANSMISSION SOURCE</div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Controversy Scanner Waveform -->
+                        <div class="mt-4">
+                            <div class="text-xs font-mono text-danger-glow mb-2">🚨 CONTROVERSY SCANNER • TRUTH BOMBS PER MINUTE 🚨</div>
+                            <div class="controversy-waveform">
+                                <div class="waveform-spike" style="left: 15%; height: 70%;"></div>
+                                <div class="waveform-spike" style="left: 35%; height: 90%;"></div>
+                                <div class="waveform-spike" style="left: 55%; height: 100%;"></div>
+                                <div class="waveform-spike" style="left: 75%; height: 85%;"></div>
+                                <div class="waveform-spike" style="left: 85%; height: 95%;"></div>
+                            </div>
+                            <div class="text-xs font-mono text-danger-glow mt-1 text-center">
+                                <span class="danger-level">⚠️ DANGER LEVEL: MAXIMUM ⚠️</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-surface rounded-xl p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h2 class="text-xl font-bold text-sand">📝 Transcript</h2>
+                            <input 
+                                type="text" 
+                                id="search-transcript" 
+                                placeholder="Search transcript..."
+                                class="px-3 py-1 bg-dark-gray text-sand rounded border border-border focus:border-gold outline-none"
+                            >
+                        </div>
+                        <div id="transcript-list-content" class="max-h-96 overflow-y-auto space-y-2">
+                            <div class="text-center py-8 text-light-gray">
+                                Select a transcript to view segments
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Panel -->
+                <div class="lg:col-span-1 space-y-6">
+                    <div class="video-card rounded-xl p-6 hud-brackets">
+                        <h2 class="section-header text-3xl font-bold text-neon-gold tracking-section-header uppercase mb-6">Settings</h2>
+                        
+                        <div class="mb-4">
+                            <label class="font-subhead text-lg font-medium text-neon-gray mb-3 block">Output Format</label>
+                            <select id="clip-format" class="w-full px-3 py-2 bg-primary-black text-primary-gold rounded border-2 border-primary-red font-mono text-sm focus:border-primary-gold outline-none">
+                                <option value="16:9">🖥️ LANDSCAPE (16:9) - YOUTUBE/RUMBLE</option>
+                                <option value="1:1">⬜ SQUARE (1:1) - TWITTER/INSTAGRAM</option>
+                                <option value="9:16">📱 PORTRAIT (9:16) - TIKTOK/REELS</option>
+                                <option value="4k-preserve">📺 4K PRESERVE - ORIGINAL RESOLUTION</option>
+                                <option value="4k-downscale">⬇️ 4K DOWNSCALE - 4K TO 1080P</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="font-headline text-sm font-bold text-primary-red mb-2 block tracking-wider">⚙️ QUALITY WARFARE</label>
+                            <select id="quality-select" class="w-full px-3 py-2 bg-primary-black text-primary-gold rounded border-2 border-primary-red font-mono text-sm focus:border-primary-gold outline-none">
+                                <option value="auto">🤖 AUTO - DETECT SOURCE QUALITY</option>
+                                <option value="4k-max">💎 4K MAXIMUM - CRF 15 (HUGE FILES)</option>
+                                <option value="4k-high">🔥 4K HIGH - CRF 18 (LARGE FILES)</option>
+                                <option value="4k-balanced">⚖️ 4K BALANCED - CRF 21 (MEDIUM FILES)</option>
+                                <option value="1080p-high">📹 1080P HIGH - CRF 20</option>
+                                <option value="1080p-web">🌐 1080P WEB - CRF 23 (FAST UPLOAD)</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-sand mb-2">Quality</label>
+                            <select id="clip-quality" class="w-full px-3 py-2 bg-dark-gray text-sand rounded border border-border">
+                                <option value="1080p">1080p HD</option>
+                                <option value="720p">720p</option>
+                                <option value="480p">480p</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="flex items-center space-x-2 mb-2">
+                                <input type="checkbox" id="banner-enabled" checked class="text-gold">
+                                <span class="text-sm font-medium text-sand">📜 Scrolling Banner</span>
+                            </label>
+                            <input 
+                                type="text" 
+                                id="banner-text" 
+                                value="TheAaronDayShow.com • Fighting Technocracy"
+                                class="w-full px-3 py-2 bg-dark-gray text-sand rounded border border-border mb-2"
+                            >
+                            <input type="range" id="banner-speed" min="10" max="100" value="50" class="w-full">
+                            <div class="text-xs text-light-gray mt-1">Speed: <span id="speed-value">50</span>%</div>
+                        </div>
+
+                        <!-- Sponsor Logo System -->
+                        <div class="mb-4 p-3 bg-primary-black/50 rounded border border-primary-gold/50">
+                            <label class="flex items-center space-x-2 mb-3">
+                                <input type="checkbox" id="logo-enabled" class="text-gold">
+                                <span class="text-sm font-medium text-primary-gold">💰 SPONSOR BRANDING SYSTEM</span>
+                            </label>
+                            
+                            <!-- Sponsor Selection -->
+                            <div class="mb-3">
+                                <label class="block text-xs text-light-gray mb-1">Active Sponsor</label>
+                                <select id="sponsor-select" class="w-full px-3 py-2 bg-dark-gray text-sand rounded border border-border text-sm">
+                                    <option value="">Select Sponsor...</option>
+                                    <option value="aaron-day-show">Aaron Day Show (Default)</option>
+                                </select>
+                                <div class="text-xs text-primary-gold mt-1">💡 Revenue per branded clip: $5-50</div>
+                            </div>
+
+                            <!-- Add New Sponsor -->
+                            <div class="mb-3 p-2 bg-dark-gray/50 rounded border border-border">
+                                <div class="text-xs font-medium text-primary-gold mb-2">📈 ADD NEW SPONSOR</div>
+                                <div class="grid grid-cols-2 gap-2 mb-2">
+                                    <input 
+                                        type="text" 
+                                        id="sponsor-name" 
+                                        placeholder="Sponsor Name"
+                                        class="px-2 py-1 bg-dark-gray text-sand rounded border border-border text-xs"
+                                    >
+                                    <input 
+                                        type="number" 
+                                        id="sponsor-rate" 
+                                        placeholder="Rate ($)"
+                                        min="0"
+                                        class="px-2 py-1 bg-dark-gray text-sand rounded border border-border text-xs"
+                                    >
+                                </div>
+                                <input 
+                                    type="file" 
+                                    id="sponsor-logo-file" 
+                                    accept="image/*"
+                                    class="w-full px-2 py-1 bg-dark-gray text-sand rounded border border-border text-xs mb-2"
+                                >
+                                <button 
+                                    id="add-sponsor" 
+                                    class="w-full py-1 bg-primary-gold text-primary-black text-xs font-bold rounded hover:bg-amber transition-colors"
+                                >
+                                    💰 ADD SPONSOR
+                                </button>
+                            </div>
+
+                            <!-- Current Sponsor Preview -->
+                            <div id="sponsor-preview" class="mb-3 p-2 bg-dark-gray/30 rounded border border-border hidden">
+                                <div class="text-xs text-primary-gold mb-1">CURRENT SPONSOR:</div>
+                                <div class="flex items-center space-x-2">
+                                    <img id="sponsor-preview-img" src="" alt="" class="w-8 h-8 object-contain rounded">
+                                    <div>
+                                        <div id="sponsor-preview-name" class="text-xs font-medium text-sand"></div>
+                                        <div id="sponsor-preview-rate" class="text-xs text-primary-gold"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-2 gap-2 mb-2">
+                                <div>
+                                    <label class="block text-xs text-light-gray mb-1">Position</label>
+                                    <select id="logo-position" class="w-full px-2 py-1 bg-dark-gray text-sand rounded border border-border text-sm">
+                                        <option value="top-left">Top Left</option>
+                                        <option value="top-right" selected>Top Right</option>
+                                        <option value="bottom-left">Bottom Left</option>
+                                        <option value="bottom-right">Bottom Right</option>
+                                        <option value="center">Center</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-light-gray mb-1">Size</label>
+                                    <select id="logo-size" class="w-full px-2 py-1 bg-dark-gray text-sand rounded border border-border text-sm">
+                                        <option value="small">Small (10%)</option>
+                                        <option value="medium" selected>Medium (15%)</option>
+                                        <option value="large">Large (20%)</option>
+                                        <option value="xlarge">XL (25%)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-2">
+                                <label class="block text-xs text-light-gray mb-1">Opacity: <span id="logo-opacity-value">80</span>%</label>
+                                <input type="range" id="logo-opacity" min="10" max="100" value="80" class="w-full">
+                            </div>
+                            
+                            <!-- Revenue Tracking -->
+                            <div class="mb-2 p-2 bg-primary-gold/10 rounded border border-primary-gold/30">
+                                <div class="text-xs font-mono text-primary-gold">
+                                    💰 REVENUE TRACKER 💰
+                                </div>
+                                <div class="text-xs text-light-gray mt-1">
+                                    Clips Generated Today: <span id="clips-today-count" class="text-primary-gold font-bold">0</span>
+                                </div>
+                                <div class="text-xs text-light-gray">
+                                    Estimated Revenue: $<span id="revenue-today" class="text-primary-gold font-bold">0.00</span>
+                                </div>
+                            </div>
+                            
+                            <div class="text-xs text-primary-gold font-mono text-center">
+                                💎 SPONSOR LOGOS = MAXIMUM REVENUE 💎
+                            </div>
+                        </div>
+
+                        <!-- VIRAL WARFARE ACTIVATION -->
+                        <div class="mb-4 p-3 bg-primary-red/20 rounded border-2 border-primary-red">
+                            <div class="text-center mb-3">
+                                <button 
+                                    id="activate-viral-mode" 
+                                    class="w-full py-3 bg-primary-red text-primary-black font-bold text-lg rounded hover:bg-danger-glow transition-colors transform hover:scale-105 animate-pulse-red"
+                                >
+                                    ⚡ ACTIVATE VIRAL WARFARE ⚡
+                                </button>
+                            </div>
+                            <div class="text-xs text-center text-primary-red font-mono">
+                                🚨 MAXIMUM CONTROVERSY MODE 🚨
+                            </div>
+                        </div>
+
+                        <!-- Manual Timestamp Input -->
+                        <div class="mb-4 p-3 bg-dark-gray rounded border border-border">
+                            <div class="text-sm font-medium text-sand mb-3">✂️ Manual Clip Creation</div>
+                            <div class="grid grid-cols-2 gap-2 mb-2">
+                                <div>
+                                    <label class="block text-xs text-light-gray mb-1">Start Time</label>
+                                    <input 
+                                        type="text" 
+                                        id="manual-start" 
+                                        placeholder="0:44 or [00:38:24.877]"
+                                        class="w-full px-2 py-1 bg-charcoal text-sand rounded border border-border text-sm"
+                                    >
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-light-gray mb-1">End Time</label>
+                                    <input 
+                                        type="text" 
+                                        id="manual-end" 
+                                        placeholder="0:53 or [00:46:06.311]"
+                                        class="w-full px-2 py-1 bg-charcoal text-sand rounded border border-border text-sm"
+                                    >
+                                </div>
+                            </div>
+                            <input 
+                                type="text" 
+                                id="manual-title" 
+                                placeholder="Clip title (optional)"
+                                class="w-full px-2 py-1 bg-charcoal text-sand rounded border border-border text-sm mb-2"
+                            >
+                            <div class="grid grid-cols-2 gap-2">
+                                <button 
+                                    id="create-manual-clip" 
+                                    type="button"
+                                    onclick="window.videoClipperAppApp.createManualClipDirect()"
+                                    class="py-2 bg-amber text-charcoal font-medium rounded hover:bg-gold transition-colors text-sm"
+                                >
+                                    Create Single Clip
+                                </button>
+                                <button 
+                                    id="toggle-batch-mode" 
+                                    class="py-2 bg-surface text-sand font-medium rounded hover:bg-border transition-colors text-sm"
+                                >
+                                    Batch Mode
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Batch Mode -->
+                        <div id="batch-mode" class="mb-4 p-3 bg-dark-gray rounded border border-border hidden">
+                            <div class="text-sm font-medium text-sand mb-3">📋 Batch Clip Creation</div>
+                            <div class="text-xs text-light-gray mb-2">Enter multiple clips, one per line: start-end title</div>
+                            <textarea 
+                                id="batch-input" 
+                                placeholder="0:44-0:53 RAGE Acronym Revealed&#10;1:08-1:47 Democracy is a Delusion&#10;11:37-12:08 Americans Have No Power"
+                                class="w-full px-2 py-2 bg-charcoal text-sand rounded border border-border text-sm h-24 mb-2 resize-none"
+                            ></textarea>
+                            <button 
+                                id="create-batch-clips" 
+                                class="w-full py-2 bg-gold text-charcoal font-medium rounded hover:bg-amber transition-colors text-sm"
+                            >
+                                Create All Clips
+                            </button>
+                        </div>
+
+                        <div id="selected-segment" class="mb-4 p-3 bg-dark-gray rounded border-l-4 border-gold hidden">
+                            <div class="text-sm font-medium text-sand mb-1">Selected Segment</div>
+                            <div id="segment-info" class="text-xs text-light-gray"></div>
+                            <div id="segment-text" class="text-sm text-light-gray mt-2"></div>
+                        </div>
+
+                        <button 
+                            id="generate-clip" 
+                            disabled
+                            class="w-full py-3 bg-gold text-charcoal font-bold rounded hover:bg-amber transition-colors disabled:bg-dark-gray disabled:text-light-gray disabled:cursor-not-allowed"
+                        >
+                            Generate Clip
+                        </button>
+                    </div>
+
+                    <div class="bg-surface rounded-xl p-6">
+                        <h2 class="text-xl font-bold text-sand mb-4">🎞️ Generated Clips</h2>
+                        <div id="clips-list" class="space-y-3">
+                            <div class="text-center py-4 text-light-gray">No clips generated yet</div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                <!-- End Video Clipper Tab -->
+                
+                <!-- Podcast Automation Tab -->
+                <div id="podcast-automation-tab" class="tab-panel hidden">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="video-card">
+                            <h2 class="font-headline text-2xl font-bold text-neon-gold mb-4">🎙️ EPISODE PROCESSING PIPELINE</h2>
+                            <div class="text-center py-8 text-safe-muted font-body">
+                                <div class="text-4xl mb-4">🎙️</div>
+                                <div class="text-lg font-semibold">PODCAST AUTOMATION COMING SOON</div>
+                                <div class="text-sm mt-2">Auto-detect recordings • Generate transcripts • Upload to platforms</div>
+                            </div>
+                        </div>
+                        <div class="video-card">
+                            <h2 class="font-headline text-2xl font-bold text-neon-gold mb-4">📋 EPISODE QUEUE</h2>
+                            <div class="text-center py-8 text-safe-muted font-body">
+                                <div class="text-2xl mb-2">📋</div>
+                                <div>NO EPISODES IN QUEUE</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Content Generation Tab -->
+                <div id="content-generation-tab" class="tab-panel hidden">
+                    <div class="video-card">
+                        <h2 class="font-headline text-2xl font-bold text-neon-gold mb-4">📝 AI CONTENT GENERATION ENGINE</h2>
+                        <div class="text-center py-8 text-safe-muted font-body">
+                            <div class="text-4xl mb-4">📝</div>
+                            <div class="text-lg font-semibold">CONTENT GENERATION COMING SOON</div>
+                            <div class="text-sm mt-2">Voice profile integration • Article generation • Social media posts</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Analytics & Insights Tab -->
+                <div id="analytics-insights-tab" class="tab-panel hidden">
+                    <div class="video-card">
+                        <h2 class="font-headline text-2xl font-bold text-neon-gold mb-4">📊 ANALYTICS & PERFORMANCE INSIGHTS</h2>
+                        <div class="text-center py-8 text-safe-muted font-body">
+                            <div class="text-4xl mb-4">📊</div>
+                            <div class="text-lg font-semibold">ANALYTICS DASHBOARD COMING SOON</div>
+                            <div class="text-sm mt-2">Cross-platform analytics • Engagement tracking • ROI analysis</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Distribution Hub Tab -->
+                <div id="distribution-hub-tab" class="tab-panel hidden">
+                    <div class="video-card">
+                        <h2 class="font-headline text-2xl font-bold text-neon-gold mb-4">🔄 MULTI-PLATFORM DISTRIBUTION</h2>
+                        <div class="text-center py-8 text-safe-muted font-body">
+                            <div class="text-4xl mb-4">🔄</div>
+                            <div class="text-lg font-semibold">DISTRIBUTION HUB COMING SOON</div>
+                            <div class="text-sm mt-2">YouTube automation • Social media scheduling • Website publishing</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Audience Management Tab -->
+                <div id="audience-management-tab" class="tab-panel hidden">
+                    <div class="video-card">
+                        <h2 class="font-headline text-2xl font-bold text-neon-gold mb-4">📧 AUDIENCE MANAGEMENT & ENGAGEMENT</h2>
+                        <div class="text-center py-8 text-safe-muted font-body">
+                            <div class="text-4xl mb-4">📧</div>
+                            <div class="text-lg font-semibold">AUDIENCE MANAGEMENT COMING SOON</div>
+                            <div class="text-sm mt-2">Email campaigns • Subscriber analytics • Community engagement</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- System Monitoring Tab -->
+                <div id="system-monitoring-tab" class="tab-panel hidden">
+                    <div class="video-card">
+                        <h2 class="font-headline text-2xl font-bold text-neon-gold mb-4">⚙️ SYSTEM MONITORING & STATUS</h2>
+                        <div class="text-center py-8 text-safe-muted font-body">
+                            <div class="text-4xl mb-4">⚙️</div>
+                            <div class="text-lg font-semibold">SYSTEM MONITORING COMING SOON</div>
+                            <div class="text-sm mt-2">Server status • Process monitoring • Error tracking</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Campaign Manager Tab -->
+                <div id="campaign-manager-tab" class="tab-panel hidden">
+                    <div class="video-card">
+                        <h2 class="font-headline text-2xl font-bold text-neon-gold mb-4">🎯 CAMPAIGN MANAGEMENT & ORCHESTRATION</h2>
+                        <div class="text-center py-8 text-safe-muted font-body">
+                            <div class="text-4xl mb-4">🎯</div>
+                            <div class="text-lg font-semibold">CAMPAIGN MANAGER COMING SOON</div>
+                            <div class="text-sm mt-2">Event-driven workflows • Progress monitoring • Campaign orchestration</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Music Tab -->
+                <div id="music-tab" class="tab-panel active">
+                    <div class="video-card">
+                        <h2 class="section-header text-3xl font-bold text-neon-gold tracking-section-header uppercase mb-6">Suno Music & Lyric Integration</h2>
+                        
+                        <!-- Suno Lyric Downloader Section -->
+                        <div class="mb-8">
+                            <h3 class="font-headline text-lg font-semibold text-neon-pink mb-4">TIMESTAMPED LYRIC DOWNLOADER</h3>
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                
+                                <!-- URL Input Section -->
+                                <div class="bg-dark-gray rounded-lg p-6">
+                                    <h4 class="font-semibold text-neon-gold mb-3">SUNO SONG URL</h4>
+                                    <input type="url" id="suno-url" placeholder="https://suno.com/song/your-song-id" 
+                                           class="w-full p-3 rounded bg-neon-black border border-border text-neon-gray focus:border-neon-gold focus:outline-none mb-3">
+                                    
+                                    <h4 class="font-semibold text-neon-gold mb-3">SESSION TOKEN</h4>
+                                    <input type="password" id="session-token" placeholder="Your __session cookie value" 
+                                           class="w-full p-3 rounded bg-neon-black border border-border text-neon-gray focus:border-neon-gold focus:outline-none mb-4">
+                                    
+                                    <div class="flex gap-3">
+                                        <button id="download-srt" class="btn-primary flex-1 py-3 rounded font-semibold">
+                                            DOWNLOAD SRT
+                                        </button>
+                                        <button id="download-lrc" class="btn-secondary flex-1 py-3 rounded font-semibold">
+                                            DOWNLOAD LRC
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Instructions Section -->
+                                <div class="bg-dark-gray rounded-lg p-6">
+                                    <h4 class="font-semibold text-neon-teal mb-3">HOW TO USE</h4>
+                                    <div class="text-sm text-neon-gray space-y-2">
+                                        <div class="flex items-start gap-2">
+                                            <span class="text-neon-gold">1.</span>
+                                            <span>Go to suno.com and find your song</span>
+                                        </div>
+                                        <div class="flex items-start gap-2">
+                                            <span class="text-neon-gold">2.</span>
+                                            <span>Copy the song URL from the address bar</span>
+                                        </div>
+                                        <div class="flex items-start gap-2">
+                                            <span class="text-neon-gold">3.</span>
+                                            <span>Get your session token:</span>
+                                        </div>
+                                        <div class="ml-4 text-xs text-light-gray space-y-1">
+                                            <div>• Open browser dev tools (F12)</div>
+                                            <div>• Go to Application → Cookies → suno.com</div>
+                                            <div>• Copy the '__session' cookie value</div>
+                                        </div>
+                                        <div class="flex items-start gap-2">
+                                            <span class="text-neon-gold">4.</span>
+                                            <span>Choose format and download!</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Format Information -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                            <div class="bg-dark-gray rounded-lg p-6">
+                                <h4 class="font-subhead text-lg font-medium text-neon-pink mb-3">SRT Format</h4>
+                                <div class="text-sm text-neon-gray">
+                                    <div class="mb-2">Perfect for video subtitles and captioning</div>
+                                    <div class="bg-neon-black p-3 rounded text-xs font-mono">
+                                        1<br/>
+                                        00:00:12,340 --> 00:00:15,670<br/>
+                                        [Sample lyric text]
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-dark-gray rounded-lg p-6">
+                                <h4 class="font-subhead text-lg font-medium text-neon-teal mb-3">LRC Format</h4>
+                                <div class="text-sm text-neon-gray">
+                                    <div class="mb-2">Perfect for music players and karaoke</div>
+                                    <div class="bg-neon-black p-3 rounded text-xs font-mono">
+                                        [00:12.34][Sample lyric text]<br/>
+                                        [00:15.67][Next lyric line]
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Suno 5.0 Features -->
+                        <div class="bg-gradient-to-r from-neon-pink/20 to-neon-teal/20 rounded-lg p-6 mb-6">
+                            <h3 class="font-headline text-xl font-semibold text-neon-gold mb-4">Suno 5.0 Features</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                                <div class="text-center">
+                                    <div class="text-2xl mb-2">🎯</div>
+                                    <div class="font-semibold text-neon-pink">Enhanced Quality</div>
+                                    <div class="text-neon-gray">Better audio fidelity and vocal clarity</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-2xl mb-2">⚡</div>
+                                    <div class="font-semibold text-neon-teal">Faster Generation</div>
+                                    <div class="text-neon-gray">Reduced processing times</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-2xl mb-2">🎼</div>
+                                    <div class="font-semibold text-neon-gold">Better Lyrics</div>
+                                    <div class="text-neon-gray">Improved word-level timing</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Status Display -->
+                        <div id="music-status" class="hidden bg-dark-gray rounded-lg p-4">
+                            <div id="music-status-text" class="text-sm text-neon-gray"></div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+
+        <!-- Status Bar -->
+        <div id="status-bar" class="fixed bottom-0 left-0 right-0 bg-surface border-t border-border p-3 hidden">
+            <div class="max-w-7xl mx-auto">
+                <div id="status-text" class="text-sm text-light-gray"></div>
+            </div>
+        </div>
+
+        <!-- MAXIMUM CONTROVERSY WARFARE SECTION -->
+        <div id="viral-content-section" class="max-w-7xl mx-auto px-6 pb-6 hidden">
+            <div class="video-card rounded-xl p-8 hud-brackets relative">
+                <!-- Danger Tape Border Animation -->
+                <div class="absolute inset-0 rounded-xl border-4 border-danger-glow opacity-20 animate-pulse"></div>
+                
+                <div class="relative z-10">
+                    <div class="flex items-center justify-center mb-6">
+                        <h2 class="font-headline text-4xl font-bold text-primary-red tracking-widest text-center">
+                            ⚡ MAXIMUM CONTROVERSY ACTIVATED ⚡
+                        </h2>
+                    </div>
+                    
+                    <div class="font-mono text-center text-primary-gold text-sm mb-8 tracking-wider">
+                        [ VIRAL WARFARE PROTOCOL ENGAGED • ENGAGEMENT MAXIMIZATION MODE ]
+                    </div>
+                    
+                    <!-- Viral Warfare Arsenal -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
+                        <button class="viral-tool btn-primary px-6 py-4 rounded-lg font-cta text-sm hover:scale-105 transform transition-all">
+                            🎯 FIND VIRAL MOMENTS
+                        </button>
+                        <button class="viral-tool bg-primary-gold hover:bg-amber-400 text-primary-black px-6 py-4 rounded-lg font-cta text-sm hover:scale-105 transform transition-all">
+                            🎣 GENERATE HOOKS
+                        </button>
+                        <button class="viral-tool bg-viral-purple hover:bg-purple-600 text-white px-6 py-4 rounded-lg font-cta text-sm hover:scale-105 transform transition-all">
+                            📱 TIKTOK WARFARE
+                        </button>
+                        <button class="viral-tool bg-matrix-green hover:bg-green-600 text-white px-6 py-4 rounded-lg font-cta text-sm hover:scale-105 transform transition-all">
+                            📦 BATCH DEPLOY
+                        </button>
+                    </div>
+                    
+                    <!-- Battle Results Terminal -->
+                    <div id="viral-results" class="bg-primary-black rounded-lg p-6 min-h-[150px] border-2 border-primary-red/50 font-mono">
+                            <div class="text-center text-safe-muted">
+                                <div class="text-2xl mb-2">🏴‍☠️</div>
+                                <div>AWAITING ORDERS, CAPTAIN</div>
+                                <div class="text-xs mt-2">SELECT TRANSMISSION • CHOOSE WEAPON • DOMINATE INTERNET</div>
+                                
+                                <!-- 4K Test Button -->
+                                <button onclick="test4KGeneration()" class="mt-4 px-4 py-2 bg-viral-purple text-white font-mono text-sm rounded border-2 border-primary-gold hover:bg-purple-600 transition-colors">
+                                    🧪 TEST 4K GENERATION
+                                </button>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="dashboard.js?v=1758405000"></script>
+        <script src="music.js?v=1758405001"></script>
+    <script src="viral-engine.js?v=1758371600"></script>
+    <script src="viral-ui.js?v=1758371600"></script>
+    <script src="viral-debug.js?v=1758371600"></script>
+    <script src="app.js?v=1758405000"></script>
+    
+    <script>
+    // PIRATE BROADCAST VIRAL ANALYSIS ENGINE
+    function analyzeTranscriptForViralMoments(transcriptSegments) {
+        if (!transcriptSegments || transcriptSegments.length === 0) return [];
+        
+        const viralKeywords = [
+            // Controversy triggers
+            'exposed', 'truth', 'lies', 'government', 'control', 'conspiracy', 'corrupt', 'scam', 'fraud',
+            'wake up', 'sheep', 'brainwashed', 'propaganda', 'mainstream', 'deep state', 'cabal',
+            // Emotional triggers
+            'shocking', 'unbelievable', 'insane', 'crazy', 'ridiculous', 'outrageous', 'disgusting',
+            'terrifying', 'incredible', 'amazing', 'stunning', 'explosive',
+            // Action triggers
+            'must watch', 'urgent', 'breaking', 'leaked', 'exclusive', 'banned', 'censored',
+            'they don\'t want you to know', 'hidden', 'secret', 'classified'
+        ];
+        
+        const viralMoments = [];
+        
+        transcriptSegments.forEach((segment, index) => {
+            if (!segment.text) return;
+            
+            const text = segment.text.toLowerCase();
+            let score = 0;
+            let type = 'STANDARD';
+            
+            // Count viral keywords
+            viralKeywords.forEach(keyword => {
+                if (text.includes(keyword.toLowerCase())) {
+                    score += keyword.length > 8 ? 15 : 10; // Longer phrases = higher score
+                }
+            });
+            
+            // Boost for question format (engagement)
+            if (text.includes('?')) score += 5;
+            
+            // Boost for exclamation (emotion)
+            if (text.includes('!')) score += 5;
+            
+            // Boost for numbers/statistics (credibility)
+            if (/\d+%|\d+\s+(percent|million|billion|trillion)/.test(text)) score += 8;
+            
+            // Determine controversy type and adjust score
+            if (text.includes('government') || text.includes('control') || text.includes('deep state')) {
+                type = 'CONSPIRACY';
+                score += 10;
+            } else if (text.includes('wake up') || text.includes('sheep') || text.includes('brainwashed')) {
+                type = 'AWAKENING';
+                score += 12;
+            } else if (text.includes('exposed') || text.includes('truth') || text.includes('lies')) {
+                type = 'REVELATION';
+                score += 8;
+            } else if (text.includes('breaking') || text.includes('urgent') || text.includes('leaked')) {
+                type = 'BREAKING';
+                score += 15;
+            }
+            
+            // Only include if above threshold
+            if (score >= 15) {
+                viralMoments.push({
+                    start: segment.timestamp || index * 30, // Fallback timing
+                    end: (segment.timestamp || index * 30) + 30, // 30 second clips
+                    text: segment.text,
+                    score: Math.min(score, 100), // Cap at 100
+                    type: type
+                });
+            }
+        });
+        
+        // Sort by score (highest first)
+        return viralMoments.sort((a, b) => b.score - a.score).slice(0, 10); // Top 10
+    }
+    
+    function formatTime(seconds) {
+        const h = Math.floor(seconds / 3600);
+        const m = Math.floor((seconds % 3600) / 60);
+        const s = Math.floor(seconds % 60);
+        if (h > 0) {
+            return `${h}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+        }
+        return `${m}:${s.toString().padStart(2, '0')}`;
+    }
+    
+    // PIRATE NAVIGATION MODE SYSTEM
+    let currentMode = 'viral';
+    
+    function getModeKeywords(mode) {
+        const keywords = {
+            'viral': [
+                'exposed', 'truth', 'lies', 'shocking', 'unbelievable', 'breaking', 'leaked', 'exclusive',
+                'they don\'t want you to know', 'hidden', 'secret', 'must watch', 'viral', 'trending'
+            ],
+            'hot-takes': [
+                'opinion', 'think', 'believe', 'wrong', 'right', 'disagree', 'argue', 'debate',
+                'controversial', 'unpopular', 'hot take', 'spicy', 'bold', 'provocative'
+            ],
+            'red-pills': [
+                'wake up', 'sheep', 'brainwashed', 'propaganda', 'mainstream', 'matrix', 'reality',
+                'truth', 'lies', 'deception', 'manipulation', 'control', 'awakening', 'red pill'
+            ],
+            'counter-ops': [
+                'government', 'deep state', 'cabal', 'conspiracy', 'corrupt', 'system', 'establishment',
+                'resistance', 'fight', 'operation', 'intel', 'classified', 'counter', 'ops'
+            ],
+            'privacy': [
+                'surveillance', 'tracking', 'privacy', 'data', 'encryption', 'secure', 'anonymous',
+                'vpn', 'bitcoin', 'crypto', 'decentralized', 'freedom', 'liberty', 'rights'
+            ]
+        };
+        return keywords[mode] || keywords['viral'];
+    }
+    
+    function getModeDescription(mode) {
+        const descriptions = {
+            'viral': 'MAXIMUM ENGAGEMENT • VIRAL MOMENT DETECTION',
+            'hot-takes': 'CONTROVERSIAL OPINIONS • DEBATE STARTERS', 
+            'red-pills': 'AWAKENING CONTENT • TRUTH BOMBS',
+            'counter-ops': 'ANTI-ESTABLISHMENT • RESISTANCE INTEL',
+            'privacy': 'FREEDOM TECH • PRIVACY WARFARE'
+        };
+        return descriptions[mode] || descriptions['viral'];
+    }
+    
+    function switchPirateMode(mode) {
+        currentMode = mode;
+        
+        // Update active nav button
+        document.querySelectorAll('.pirate-nav-item').forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.dataset.mode === mode) {
+                btn.classList.add('active');
+            }
+        });
+        
+        // Update viral section description
+        const modeDesc = document.querySelector('.font-mono.text-center.text-primary-gold');
+        if (modeDesc) {
+            modeDesc.textContent = `[ ${getModeDescription(mode)} ]`;
+        }
+        
+        // Update viral tools based on mode
+        updateViralToolsForMode(mode);
+        
+        // Show status
+        if (window.videoClipperApp && window.videoClipperApp.showStatus) {
+            window.videoClipperApp.showStatus(`🏴‍☠️ Switched to ${mode.toUpperCase().replace('-', ' ')} mode`);
+        }
+        
+        console.log(`🏴‍☠️ PIRATE MODE: ${mode.toUpperCase()}`);
+    }
+    
+    function updateViralToolsForMode(mode) {
+        const toolButtons = document.querySelectorAll('.viral-tool');
+        if (toolButtons.length >= 4) {
+            switch(mode) {
+                case 'hot-takes':
+                    toolButtons[0].innerHTML = '🔥 FIND HOT TAKES';
+                    toolButtons[1].innerHTML = '💥 DEBATE STARTERS';
+                    toolButtons[2].innerHTML = '🎯 OPINION CLIPS';
+                    toolButtons[3].innerHTML = '📦 CONTROVERSY BATCH';
+                    break;
+                case 'red-pills':
+                    toolButtons[0].innerHTML = '💊 TRUTH MOMENTS';
+                    toolButtons[1].innerHTML = '⚡ AWAKENING HOOKS';
+                    toolButtons[2].innerHTML = '🧠 MIND BOMBS';
+                    toolButtons[3].innerHTML = '📦 REDPILL PACKAGE';
+                    break;
+                case 'counter-ops':
+                    toolButtons[0].innerHTML = '🏴 RESISTANCE INTEL';
+                    toolButtons[1].innerHTML = '⚔️ ATTACK VECTORS';
+                    toolButtons[2].innerHTML = '💣 SYSTEM BREAKERS';
+                    toolButtons[3].innerHTML = '📦 OPERATION BATCH';
+                    break;
+                case 'privacy':
+                    toolButtons[0].innerHTML = '🔐 PRIVACY MOMENTS';
+                    toolButtons[1].innerHTML = '🛡️ FREEDOM HOOKS';
+                    toolButtons[2].innerHTML = '🔒 SECURE CLIPS';
+                    toolButtons[3].innerHTML = '📦 LIBERTY PACKAGE';
+                    break;
+                default: // viral
+                    toolButtons[0].innerHTML = '🎯 FIND VIRAL MOMENTS';
+                    toolButtons[1].innerHTML = '🎣 GENERATE HOOKS';
+                    toolButtons[2].innerHTML = '📱 TIKTOK WARFARE';
+                    toolButtons[3].innerHTML = '📦 BATCH DEPLOY';
+            }
+        }
+    }
+    
+    // Enhanced viral moment analysis with mode filtering
+    function analyzeTranscriptForViralMoments(transcriptSegments, mode = 'viral') {
+        if (!transcriptSegments || transcriptSegments.length === 0) return [];
+        
+        const modeKeywords = getModeKeywords(mode);
+        const viralMoments = [];
+        
+        transcriptSegments.forEach((segment, index) => {
+            if (!segment.text) return;
+            
+            const text = segment.text.toLowerCase();
+            let score = 0;
+            let type = mode.toUpperCase().replace('-', ' ');
+            
+            // Count mode-specific keywords
+            modeKeywords.forEach(keyword => {
+                if (text.includes(keyword.toLowerCase())) {
+                    score += keyword.length > 8 ? 20 : 15; // Mode-specific boost
+                }
+            });
+            
+            // Mode-specific scoring bonuses
+            switch(mode) {
+                case 'hot-takes':
+                    if (text.includes('i think') || text.includes('in my opinion')) score += 10;
+                    if (text.includes('disagree') || text.includes('wrong')) score += 15;
+                    break;
+                case 'red-pills':
+                    if (text.includes('wake up') || text.includes('reality')) score += 20;
+                    if (text.includes('matrix') || text.includes('truth')) score += 15;
+                    break;
+                case 'counter-ops':
+                    if (text.includes('government') || text.includes('system')) score += 25;
+                    if (text.includes('resist') || text.includes('fight')) score += 20;
+                    break;
+                case 'privacy':
+                    if (text.includes('surveillance') || text.includes('tracking')) score += 20;
+                    if (text.includes('bitcoin') || text.includes('crypto')) score += 15;
+                    break;
+            }
+            
+            // Universal engagement boosters
+            if (text.includes('?')) score += 5;
+            if (text.includes('!')) score += 5;
+            if (/\d+%|\d+\s+(percent|million|billion|trillion)/.test(text)) score += 8;
+            
+            // Only include if above threshold
+            if (score >= 15) {
+                viralMoments.push({
+                    start: segment.timestamp || index * 30,
+                    end: (segment.timestamp || index * 30) + 30,
+                    text: segment.text,
+                    score: Math.min(score, 100),
+                    type: type
+                });
+            }
+        });
+        
+        return viralMoments.sort((a, b) => b.score - a.score).slice(0, 10);
+    }
+    
+    // Build config from UI settings
+    function buildClipConfig() {
+        const format = document.getElementById('clip-format')?.value || '16:9';
+        const quality = document.getElementById('quality-select')?.value || 'auto';
+        
+        return {
+            format: format,
+            quality: quality,
+            preserve4K: quality.includes('4k'),
+            banner: {
+                enabled: false, // Can be enhanced later
+                text: '',
+                speed: 50
+            }
+        };
+    }
+    
+    // Enhanced clip generation with 4K support
+    async function generateViralClip(videoFile, segment, viralMode = false, platform = 'default') {
+        const config = buildClipConfig();
+        
+        console.log('🎬 Generating clip with 4K support:', {
+            videoFile,
+            segment,
+            config,
+            viralMode,
+            platform
+        });
+        
+        try {
+            const response = await fetch('/api/generate-clip', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    videoFile: videoFile,
+                    segment: segment,
+                    config: config,
+                    quality: config.quality,
+                    viralMode: viralMode,
+                    platform: platform,
+                    controversyScore: segment.controversyScore || 50,
+                    hooks: segment.hooks || []
+                })
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                console.log('✅ Clip generated successfully:', result);
+                if (window.videoClipperApp && window.videoClipperApp.showStatus) {
+                    window.videoClipperApp.showStatus(`🎬 Clip generated: ${result.clipUrl}`);
+                }
+                return result;
+            } else {
+                throw new Error(result.error || 'Clip generation failed');
+            }
+        } catch (error) {
+            console.error('❌ Clip generation error:', error);
+            if (window.videoClipperApp && window.videoClipperApp.showStatus) {
+                window.videoClipperApp.showStatus(`❌ Error: ${error.message}`, true);
+            }
+            throw error;
+        }
+    }
+    
+    // Generate hooks based on segment text and mode
+    function generateHooksForSegment(text, mode) {
+        const baseHooks = [
+            { text: "🚨 THEY DON'T WANT YOU TO KNOW THIS:", engagement: 92 },
+            { text: "💣 EXPOSED: The truth about", engagement: 88 },
+            { text: "⚠️ WARNING: This will change everything", engagement: 85 },
+            { text: "🔥 BREAKING: What they're hiding", engagement: 90 },
+            { text: "💊 The reality they don't want you to see", engagement: 87 }
+        ];
+        
+        const modeHooks = {
+            'hot-takes': [
+                { text: "🌶️ HOT TAKE: Everyone's wrong about", engagement: 89 },
+                { text: "💥 UNPOPULAR OPINION: The truth is", engagement: 85 },
+                { text: "🎯 CONTROVERSIAL: Why I disagree with", engagement: 91 }
+            ],
+            'red-pills': [
+                { text: "💊 RED PILL: Wake up to the reality of", engagement: 94 },
+                { text: "🧠 MIND BLOWN: The matrix of lies about", engagement: 88 },
+                { text: "⚡ AWAKENING: They've been lying about", engagement: 92 }
+            ],
+            'counter-ops': [
+                { text: "🏴 RESISTANCE: Fighting back against", engagement: 96 },
+                { text: "⚔️ COUNTER-ATTACK: Exposing their", engagement: 93 },
+                { text: "💣 OPERATION: Taking down the system of", engagement: 89 }
+            ],
+            'privacy': [
+                { text: "🔐 PRIVACY ALERT: They're tracking your", engagement: 87 },
+                { text: "🛡️ FREEDOM TECH: Protect yourself from", engagement: 84 },
+                { text: "🔒 SECURE: Break free from their", engagement: 90 }
+            ]
+        };
+        
+        return modeHooks[mode] || baseHooks;
+    }
+    
+    // Copy to clipboard function
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text).then(() => {
+            if (window.videoClipperApp && window.videoClipperApp.showStatus) {
+                window.videoClipperApp.showStatus(`📋 Copied: ${text}`);
+            }
+        }).catch(() => {
+            // Fallback for older browsers
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            
+            if (window.videoClipperApp && window.videoClipperApp.showStatus) {
+                window.videoClipperApp.showStatus(`📋 Copied: ${text}`);
+            }
+        });
+    }
+    
+    // 4K Test Function
+    function test4KGeneration() {
+        if (!window.videoClipperApp || !window.videoClipperApp.selectedVideo) {
+            alert('Please select a video first');
+            return;
+        }
+        
+        const testSegment = {
+            start: 0,
+            end: 10,
+            text: 'Test 4K clip generation',
+            controversyScore: 75
+        };
+        
+        generateViralClip(window.videoClipperApp.selectedVideo.filename, testSegment, true, 'test')
+            .then(result => {
+                console.log('🎉 4K Test successful:', result);
+                alert(`4K Test successful! Clip saved: ${result.clipUrl}`);
+            })
+            .catch(error => {
+                console.error('❌ 4K Test failed:', error);
+                alert(`4K Test failed: ${error.message}`);
+            });
+    }
+    
+    // Force viral mode activation
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add pirate navigation event listeners
+        document.querySelectorAll('.pirate-nav-item').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const mode = this.dataset.mode;
+                switchPirateMode(mode);
+            });
+        });
+        
+        // Viral activation button
+        const viralButton = document.getElementById('activate-viral-mode');
+        if (viralButton) {
+            viralButton.addEventListener('click', function() {
+                console.log('🔥 ACTIVATING VIRAL WARFARE MODE!');
+                
+                // Show the viral content section
+                const viralSection = document.getElementById('viral-content-section');
+                if (viralSection) {
+                    viralSection.classList.remove('hidden');
+                    viralSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    
+                    // Change button text
+                    this.innerHTML = '✅ VIRAL MODE ACTIVE ✅';
+                    this.classList.remove('animate-pulse-red');
+                    this.classList.add('bg-primary-gold', 'text-primary-black');
+                }
+                
+                // Add click handlers to viral tools
+                document.querySelectorAll('.viral-tool').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const resultsDiv = document.getElementById('viral-results');
+                        const tool = this.textContent.trim();
+                        
+                        if (tool.includes('Viral Moments')) {
+                            // Check if we have a selected video and transcript
+                            if (!window.videoClipperApp || !window.videoClipperApp.selectedVideo || !window.videoClipperApp.transcriptSegments || window.videoClipperApp.transcriptSegments.length === 0) {
+                                resultsDiv.innerHTML = `
+                                    <h3 class="text-red-400 font-bold mb-2">⚠️ NEED VIDEO + TRANSCRIPT</h3>
+                                    <p class="text-light-gray">Please select a video and load its transcript first to analyze viral moments.</p>
+                                `;
+                                return;
+                            }
+                            
+                            // Analyze actual transcript for viral moments using current mode
+                            const viralMoments = analyzeTranscriptForViralMoments(window.videoClipperApp.transcriptSegments, currentMode);
+                            
+                            if (viralMoments.length === 0) {
+                                resultsDiv.innerHTML = `
+                                    <h3 class="text-yellow-400 font-bold mb-2">🤔 NO VIRAL MOMENTS FOUND</h3>
+                                    <p class="text-light-gray">This transcript appears to be too tame. Try a more controversial episode!</p>
+                                `;
+                                return;
+                            }
+                            
+                            resultsDiv.innerHTML = `
+                                <h3 class="text-red-400 font-bold mb-2">🎯 VIRAL MOMENTS DETECTED: ${viralMoments.length}</h3>
+                                <div class="space-y-2">
+                                    ${viralMoments.map(moment => `
+                                        <div class="bg-red-900/30 border border-red-500/50 rounded p-3 cursor-pointer hover:bg-red-900/50 viral-moment-item" 
+                                             data-start="${moment.start}" data-end="${moment.end}" data-text="${moment.text}">
+                                            <div class="flex justify-between items-center">
+                                                <span class="text-sand text-sm">${formatTime(moment.start)} - ${formatTime(moment.end)}</span>
+                                                <span class="text-red-400 text-xs font-bold">${moment.type} (${moment.score}/100)</span>
+                                            </div>
+                                            <p class="text-light-gray text-xs mt-1">"${moment.text.substring(0, 80)}..."</p>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            `;
+                            
+                            // Add click handlers to viral moments
+                            document.querySelectorAll('.viral-moment-item').forEach(item => {
+                                item.addEventListener('click', function() {
+                                    const start = parseFloat(this.dataset.start);
+                                    const end = parseFloat(this.dataset.end);
+                                    const text = this.dataset.text;
+                                    
+                                    // Set the selected segment in the app
+                                    window.videoClipperApp.selectedSegment = {
+                                        start: start,
+                                        end: end,
+                                        text: text,
+                                        timestamp: start,
+                                        timeString: window.videoClipperApp.formatTime(start)
+                                    };
+                                    
+                                    // Visual feedback
+                                    document.querySelectorAll('.viral-moment-item').forEach(el => {
+                                        el.classList.remove('bg-red-900/70');
+                                    });
+                                    this.classList.add('bg-red-900/70');
+                                    
+                                    // Show success message
+                                    window.videoClipperApp.showStatus(`🎯 Selected viral moment: ${text.substring(0, 40)}...`);
+                                    
+                                    // Update manual clip fields
+                                    document.getElementById('manual-start').value = window.videoClipperApp.formatTime(start);
+                                    document.getElementById('manual-end').value = window.videoClipperApp.formatTime(end);
+                                    document.getElementById('manual-title').value = text.substring(0, 50);
+                                });
+                            });
+                            });
+                        } else if (tool.includes('Hooks') || tool.includes('GENERATE HOOKS') || tool.includes('DEBATE STARTERS') || tool.includes('AWAKENING HOOKS') || tool.includes('ATTACK VECTORS') || tool.includes('FREEDOM HOOKS')) {
+                            if (!window.videoClipperApp || !window.videoClipperApp.selectedSegment) {
+                                resultsDiv.innerHTML = `
+                                    <h3 class="text-orange-400 font-bold mb-2">⚠️ SELECT A SEGMENT FIRST</h3>
+                                    <p class="text-light-gray">Click on a viral moment or transcript segment to generate hooks.</p>
+                                `;
+                                return;
+                            }
+                            
+                            // Generate real hooks based on selected segment
+                            const hooks = generateHooksForSegment(window.videoClipperApp.selectedSegment.text, currentMode);
+                            
+                            resultsDiv.innerHTML = `
+                                <h3 class="text-orange-400 font-bold mb-2">🎣 ${currentMode.toUpperCase().replace('-', ' ')} HOOKS GENERATED:</h3>
+                                <div class="space-y-2">
+                                    ${hooks.map(hook => `
+                                        <div class="bg-orange-900/30 border border-orange-500/50 rounded p-2 cursor-pointer hover:bg-orange-900/50" onclick="copyToClipboard('${hook.text.replace(/'/g, "\\'")}')">
+                                            <p class="text-sand text-sm">"${hook.text}" <span class="text-orange-400">(${hook.engagement}% engagement)</span></p>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                                <p class="text-xs text-safe-muted mt-2">Click any hook to copy to clipboard</p>
+                            `;
+                        } else if (tool.includes('TikTok') || tool.includes('TIKTOK WARFARE') || tool.includes('OPINION CLIPS') || tool.includes('MIND BOMBS') || tool.includes('SYSTEM BREAKERS') || tool.includes('SECURE CLIPS')) {
+                            if (!window.videoClipperApp || !window.videoClipperApp.selectedVideo || !window.videoClipperApp.selectedSegment) {
+                                resultsDiv.innerHTML = `
+                                    <h3 class="text-yellow-400 font-bold mb-2">⚠️ NEED VIDEO + SEGMENT</h3>
+                                    <p class="text-light-gray">Select a video and a viral moment first.</p>
+                                `;
+                                return;
+                            }
+                            
+                            resultsDiv.innerHTML = `
+                                <h3 class="text-yellow-400 font-bold mb-2">📱 GENERATING ${currentMode.toUpperCase().replace('-', ' ')} CLIP...</h3>
+                                <div class="bg-yellow-900/30 border border-yellow-500/50 rounded p-4">
+                                    <p class="text-sand mb-2">🎬 Processing: ${window.videoClipperApp.selectedVideo.title}</p>
+                                    <p class="text-sand mb-2">⏱️ Segment: ${formatTime(window.videoClipperApp.selectedSegment.start)} - ${formatTime(window.videoClipperApp.selectedSegment.end)}</p>
+                                    <p class="text-sand mb-2">📱 Format: 9:16 Portrait</p>
+                                    <div class="text-center mt-4">
+                                        <div class="animate-spin inline-block w-6 h-6 border-2 border-yellow-400 border-t-transparent rounded-full"></div>
+                                        <p class="text-yellow-400 mt-2">GENERATING VIRAL CLIP...</p>
+                                    </div>
+                                </div>
+                            `;
+                            
+                            // Actually generate the clip
+                            generateViralClip(
+                                window.videoClipperApp.selectedVideo.filename, 
+                                {
+                                    ...window.videoClipperApp.selectedSegment,
+                                    format: '9:16' // Force portrait for TikTok
+                                }, 
+                                true, 
+                                'tiktok'
+                            ).then(result => {
+                                resultsDiv.innerHTML = `
+                                    <h3 class="text-yellow-400 font-bold mb-2">📱 TIKTOK CLIP READY!</h3>
+                                    <div class="bg-yellow-900/30 border border-yellow-500/50 rounded p-4">
+                                        <p class="text-sand mb-2">✅ Converted to 9:16 aspect ratio</p>
+                                        <p class="text-sand mb-2">✅ Optimized for mobile viewing</p>
+                                        <p class="text-sand mb-2">✅ Quality: ${result.viralEnhancements?.engagementPrediction || 'HIGH VIRAL'}</p>
+                                        <div class="mt-4 p-3 bg-primary-black rounded border border-yellow-400">
+                                            <p class="text-yellow-400 font-bold text-center">
+                                                <a href="${result.clipUrl}" target="_blank" class="hover:underline">
+                                                    🎬 DOWNLOAD CLIP
+                                                </a>
+                                            </p>
+                                        </div>
+                                    </div>
+                                `;
+                            }).catch(error => {
+                                resultsDiv.innerHTML = `
+                                    <h3 class="text-red-400 font-bold mb-2">❌ CLIP GENERATION FAILED</h3>
+                                    <div class="bg-red-900/30 border border-red-500/50 rounded p-4">
+                                        <p class="text-light-gray">${error.message}</p>
+                                    </div>
+                                `;
+                            });
+                        } else if (tool.includes('Batch') || tool.includes('BATCH DEPLOY') || tool.includes('CONTROVERSY BATCH') || tool.includes('REDPILL PACKAGE') || tool.includes('OPERATION BATCH') || tool.includes('LIBERTY PACKAGE')) {
+                            if (!window.videoClipperApp || !window.videoClipperApp.selectedVideo || !window.videoClipperApp.transcriptSegments || window.videoClipperApp.transcriptSegments.length === 0) {
+                                resultsDiv.innerHTML = `
+                                    <h3 class="text-purple-400 font-bold mb-2">⚠️ NEED VIDEO + TRANSCRIPT</h3>
+                                    <p class="text-light-gray">Select a video and load its transcript for batch generation.</p>
+                                `;
+                                return;
+                            }
+                            
+                            resultsDiv.innerHTML = `
+                                <h3 class="text-purple-400 font-bold mb-2">📦 GENERATING ${currentMode.toUpperCase().replace('-', ' ')} PACKAGE...</h3>
+                                <div class="bg-purple-900/30 border border-purple-500/50 rounded p-4">
+                                    <div class="text-center">
+                                        <div class="animate-spin inline-block w-6 h-6 border-2 border-purple-400 border-t-transparent rounded-full"></div>
+                                        <p class="text-purple-400 mt-2">ANALYZING TRANSCRIPT FOR BATCH CLIPS...</p>
+                                    </div>
+                                </div>
+                            `;
+                            
+                            // Generate batch clips from all viral moments
+                            const viralMoments = analyzeTranscriptForViralMoments(window.videoClipperApp.transcriptSegments, currentMode);
+                            const topMoments = viralMoments.slice(0, 5); // Top 5 moments
+                            
+                            if (topMoments.length === 0) {
+                                resultsDiv.innerHTML = `
+                                    <h3 class="text-purple-400 font-bold mb-2">📦 NO BATCH CLIPS FOUND</h3>
+                                    <div class="bg-purple-900/30 border border-purple-500/50 rounded p-4">
+                                        <p class="text-light-gray">This transcript doesn't have enough viral moments for batch generation.</p>
+                                    </div>
+                                `;
+                                return;
+                            }
+                            
+                            // Generate all clips
+                            let completedClips = 0;
+                            const totalClips = topMoments.length;
+                            const clipResults = [];
+                            
+                            const updateProgress = () => {
+                                resultsDiv.innerHTML = `
+                                    <h3 class="text-purple-400 font-bold mb-2">📦 BATCH GENERATING... (${completedClips}/${totalClips})</h3>
+                                    <div class="bg-purple-900/30 border border-purple-500/50 rounded p-4">
+                                        <div class="w-full bg-primary-black rounded-full h-2 mb-4">
+                                            <div class="bg-purple-400 h-2 rounded-full transition-all duration-300" style="width: ${(completedClips/totalClips)*100}%"></div>
+                                        </div>
+                                        ${clipResults.map(clip => `<p class="text-sand text-sm">✅ ${clip.title}</p>`).join('')}
+                                    </div>
+                                `;
+                            };
+                            
+                            // Generate clips sequentially
+                            topMoments.forEach((moment, index) => {
+                                setTimeout(() => {
+                                    generateViralClip(
+                                        window.videoClipperApp.selectedVideo.filename,
+                                        moment,
+                                        true,
+                                        currentMode
+                                    ).then(result => {
+                                        completedClips++;
+                                        clipResults.push({
+                                            title: `${moment.type} Clip ${index + 1}`,
+                                            url: result.clipUrl
+                                        });
+                                        
+                                        if (completedClips === totalClips) {
+                                            // All clips done
+                                            resultsDiv.innerHTML = `
+                                                <h3 class="text-purple-400 font-bold mb-2">📦 BATCH PACKAGE COMPLETE!</h3>
+                                                <div class="bg-purple-900/30 border border-purple-500/50 rounded p-4">
+                                                    <p class="text-purple-400 font-bold mb-3">🚀 ${totalClips} VIRAL CLIPS GENERATED!</p>
+                                                    ${clipResults.map(clip => `
+                                                        <div class="mb-2 p-2 bg-primary-black rounded border border-purple-400">
+                                                            <a href="${clip.url}" target="_blank" class="text-purple-400 hover:underline text-sm">
+                                                                🎬 ${clip.title}
+                                                            </a>
+                                                        </div>
+                                                    `).join('')}
+                                                </div>
+                                            `;
+                                        } else {
+                                            updateProgress();
+                                        }
+                                    }).catch(error => {
+                                        completedClips++;
+                                        clipResults.push({
+                                            title: `❌ ${moment.type} Clip ${index + 1} (Failed)`,
+                                            url: '#'
+                                        });
+                                        updateProgress();
+                                    });
+                                }, index * 2000); // 2 second delay between clips
+                            });
+                            
+                            updateProgress();
+                        }
+                    });
+                });
+                
+                // Change button text
+                this.textContent = '✅ VIRAL MODE ACTIVE';
+                this.classList.remove('animate-pulse');
+                this.classList.add('bg-green-500', 'hover:bg-green-600');
+                this.classList.remove('bg-gradient-to-r', 'from-red-500', 'to-orange-500', 'hover:from-red-600', 'hover:to-orange-600');
+            });
+        }
+    });
+    </script>
+    
+    <style>
+        /* VIRAL CONTENT MACHINE STYLES */
+        .viral-machine {
+            animation: pulse-glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes pulse-glow {
+            from { box-shadow: 0 0 20px rgba(239, 68, 68, 0.3); }
+            to { box-shadow: 0 0 40px rgba(239, 68, 68, 0.6); }
+        }
+        
+        .platform-btn {
+            @apply px-4 py-3 rounded-lg font-bold text-sm transition-all transform hover:scale-105;
+            min-height: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .tool-btn {
+            @apply px-4 py-3 rounded-lg font-bold text-white text-sm transition-all transform hover:scale-105;
+            min-height: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .viral-moment {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .viral-moment::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: left 0.5s;
+        }
+        
+        .viral-moment:hover::before {
+            left: 100%;
+        }
+        
+        .tab-button {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .tab-button.active {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+        }
+        
+        /* Viral score animations */
+        .score-extreme { animation: shake 0.5s ease-in-out infinite; }
+        .score-high { animation: glow-orange 2s ease-in-out infinite alternate; }
+        .score-medium { animation: glow-yellow 3s ease-in-out infinite alternate; }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-2px); }
+            75% { transform: translateX(2px); }
+        }
+        
+        @keyframes glow-orange {
+            from { box-shadow: 0 0 10px rgba(251, 146, 60, 0.5); }
+            to { box-shadow: 0 0 20px rgba(251, 146, 60, 0.8); }
+        }
+        
+        @keyframes glow-yellow {
+            from { box-shadow: 0 0 10px rgba(245, 158, 11, 0.5); }
+            to { box-shadow: 0 0 20px rgba(245, 158, 11, 0.8); }
+        }
+        
+        /* Results animations */
+        #viral-results {
+            animation: slideUp 0.5s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        /* Platform button hover effects */
+        .platform-btn:hover {
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+        
+        /* Controversy level indicators */
+        .controversy-extreme { border-color: #dc2626 !important; background-color: rgba(220, 38, 38, 0.2) !important; }
+        .controversy-high { border-color: #FF3B3B !important; background-color: rgba(255, 59, 59, 0.1) !important; }
+        .controversy-medium { border-color: #FFC700 !important; background-color: rgba(255, 199, 0, 0.1) !important; }
+        .controversy-low { border-color: #10b981 !important; background-color: rgba(16, 185, 129, 0.1) !important; }
+        
+        /* CINEMATIC FINAL TOUCHES */
+        input, select, textarea {
+            background: #000000 !important;
+            border: 1px solid #222222 !important;
+            color: #D1D1D1 !important;
+            padding: 0.75rem 1rem !important;
+            border-radius: 0.5rem !important;
+            font-size: 15px !important;
+            transition: all 0.3s ease !important;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            border-color: #FFC700 !important;
+            box-shadow: 0 0 0 2px rgba(255, 199, 0, 0.1) !important;
+            outline: none !important;
+        }
+        
+        /* DEBUG: Ensure content is visible */
+        #tab-content {
+            min-height: 500px;
+        }
+        
+        .video-card {
+            min-height: 200px;
+        }
+        
+        /* Force visibility for debugging */
+        #music-tab {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            position: relative !important;
+            z-index: 10 !important;
+            background: #111111 !important;
+            padding: 2rem !important;
+            margin: 1rem !important;
+            border: 2px solid #FFC700 !important;
+        }
+        
+        /* Make dark-gray backgrounds more visible */
+        .bg-dark-gray {
+            background-color: #333333 !important;
+            border: 1px solid #FFC700 !important;
+        }
+        
+        /* Ensure text is visible */
+        .text-neon-gray, .text-neon-gold, .text-neon-pink, .text-neon-teal {
+            color: #FFC700 !important;
+        }
+        
+        /* Force all content in music tab to be visible */
+        #music-tab * {
+            color: #FFC700 !important;
+            background-color: transparent !important;
+        }
+        
+        #music-tab .video-card {
+            background: #222222 !important;
+            border: 1px solid #FFC700 !important;
+            padding: 2rem !important;
+        }
+    </style>
+    
+    <script>
+        // Logo opacity slider update
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('logo-opacity').addEventListener('input', function() {
+                document.getElementById('logo-opacity-value').textContent = this.value;
+            });
+        });
+    </script>
+</body>
+</html>
