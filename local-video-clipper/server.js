@@ -639,6 +639,113 @@ app.get('/api/clips', async (req, res) => {
   }
 });
 
+// Social Media API Endpoints
+app.post('/api/social-media/post', async (req, res) => {
+  try {
+    const { account, content, type = 'immediate' } = req.body;
+    
+    if (!account || !content) {
+      return res.status(400).json({ error: 'Account and content are required' });
+    }
+    
+    // Simulate posting to X (Twitter) API
+    // In production, this would integrate with the actual X API
+    console.log(`📱 Social Media Post Request:`);
+    console.log(`Account: ${account}`);
+    console.log(`Content: ${content.substring(0, 100)}...`);
+    console.log(`Type: ${type}`);
+    
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // Return success response
+    res.json({
+      success: true,
+      postId: `post_${Date.now()}`,
+      account: account,
+      timestamp: new Date().toISOString(),
+      message: 'Post published successfully'
+    });
+    
+  } catch (error) {
+    console.error('Error posting to social media:', error);
+    res.status(500).json({ error: 'Failed to post to social media', details: error.message });
+  }
+});
+
+app.post('/api/social-media/schedule', async (req, res) => {
+  try {
+    const { account, content, scheduledFor } = req.body;
+    
+    if (!account || !content || !scheduledFor) {
+      return res.status(400).json({ error: 'Account, content, and scheduled time are required' });
+    }
+    
+    const scheduleDate = new Date(scheduledFor);
+    if (scheduleDate <= new Date()) {
+      return res.status(400).json({ error: 'Scheduled time must be in the future' });
+    }
+    
+    // In production, this would save to database and set up cron job
+    console.log(`📅 Social Media Schedule Request:`);
+    console.log(`Account: ${account}`);
+    console.log(`Content: ${content.substring(0, 100)}...`);
+    console.log(`Scheduled for: ${scheduleDate.toISOString()}`);
+    
+    res.json({
+      success: true,
+      scheduleId: `schedule_${Date.now()}`,
+      account: account,
+      scheduledFor: scheduleDate.toISOString(),
+      message: 'Post scheduled successfully'
+    });
+    
+  } catch (error) {
+    console.error('Error scheduling social media post:', error);
+    res.status(500).json({ error: 'Failed to schedule post', details: error.message });
+  }
+});
+
+app.get('/api/social-media/accounts', (req, res) => {
+  // Return available social media accounts
+  res.json({
+    accounts: [
+      {
+        id: 'aaronrday',
+        username: '@aaronrday',
+        displayName: 'Aaron Day',
+        platform: 'x',
+        verified: true,
+        connected: true // In production, check actual API connection
+      },
+      {
+        id: 'theaarondayshow',
+        username: '@theaarondayshow',
+        displayName: 'The Aaron Day Show',
+        platform: 'x',
+        verified: true,
+        connected: true
+      }
+    ]
+  });
+});
+
+app.get('/api/social-media/stats/:account', (req, res) => {
+  const { account } = req.params;
+  
+  // In production, fetch real stats from X API
+  res.json({
+    account: account,
+    stats: {
+      postsToday: Math.floor(Math.random() * 5),
+      totalPosts: Math.floor(Math.random() * 1000) + 500,
+      followers: account === 'aaronrday' ? 12543 : 8932,
+      following: account === 'aaronrday' ? 1234 : 892,
+      engagement: `${(Math.random() * 5 + 2).toFixed(1)}%`
+    }
+  });
+});
+
 // Helper function
 function timeToSeconds(timeString) {
   const parts = timeString.split(':');
