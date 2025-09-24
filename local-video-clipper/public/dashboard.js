@@ -13,7 +13,8 @@ class MasterDashboard {
             'distribution-hub',
             'audience-management',
             'system-monitoring',
-            'campaign-manager'
+            'campaign-manager',
+            'social-media'
         ];
         
         this.init();
